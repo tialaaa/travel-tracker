@@ -97,7 +97,7 @@ describe('Travelers class tests', () => {
     });
   });
 
-  it('should have an undefined property before any user is found', () => {
+  it('should have an undefined property before any user is successfully found', () => {
     expect(travelerRepo.currentUser).to.equal(undefined)
   });
 
@@ -111,11 +111,11 @@ describe('Travelers class tests', () => {
     expect(travelerRepo.printUserInfo('travelerType')).to.equal('relaxer');
   });
 
-  it('should return a undefined user info if no user has been identified', () => {
+  it('should return undefined user info if no user has been identified', () => {
     expect(travelerRepo.printUserInfo('name')).to.be.undefined;
   });
 
-  it('should return a undefined user info if the search key isn\'t an exact match', () => {
+  it('should return undefined user info if the search key isn\'t an exact match', () => {
     travelerRepo.findUserById(1);
     expect(travelerRepo.printUserInfo('type')).to.be.undefined;
   });
