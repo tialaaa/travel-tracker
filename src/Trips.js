@@ -8,18 +8,27 @@ class Trips {
   //   return this.allTrips.filter(trip => trip[searchKey] === searchValue)
   // };
 
-  findTripsBy(userID, ...status) {
+  findTripsBy(IdNumber, ...status) {
     let currentTripsFilter;
+    console.log(status)
 
-    if (userID) {
-      currentTripsFilter = this.allTrips.filter(trip => trip.userID === userID);
+    // if (!IdNumber) {
+    //   return console.log('Error: userID needs to be a number')
+    // }
+
+    if (IdNumber || IdNumber === undefined && status.length === 0) {
+      // console.log('row 15')
+      return currentTripsFilter = this.allTrips.filter(trip => trip.userID === IdNumber);
     } else {
+      console.log('row 18')
       currentTripsFilter = this.allTrips;
     };
 
     if (status.length === 1) {
+      console.log('row 23')
       return currentTripsFilter.filter((trip => trip.status === status[0]))
     } else {
+      console.log('row 26')
       return currentTripsFilter.reduce((acc, currentTrip) => {
         status.forEach(status => {
           if (currentTrip.status === status) {
