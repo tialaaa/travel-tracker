@@ -4,8 +4,8 @@ class Travelers {
     this.currentUser = undefined
   };
 
-  findUserById(searchId) {
-    this.currentUser = this.allTravelers.find(traveler => traveler.id === searchId);
+  findUserById(userID) {
+    this.currentUser = this.allTravelers.find(traveler => traveler.id === userID);
 
     return this.currentUser;
   };
