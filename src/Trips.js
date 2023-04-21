@@ -1,3 +1,5 @@
+const dayjs = require('dayjs');
+
 class Trips {
   constructor(arrayOfTrips) {
     this.allData = arrayOfTrips
@@ -5,12 +7,11 @@ class Trips {
 
   findSortedTripsBy(searchKey, searchValue) {
     // If this isn't used to filter by status for agent, change to userID prop only
-    
     let filteredList = this.allData.filter(trip => trip[searchKey] === searchValue);
 
     return filteredList.sort((a,b) => {
-      const dateA = a.date;
-      const dateB = b.date;
+      const dateA = dayjs(a.date).format('YYYY/MM/DD');
+      const dateB = dayjs(b.date).format('YYYY/MM/DD');
 
       if (dateA < dateB) {
         return 1
