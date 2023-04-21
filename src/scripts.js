@@ -37,6 +37,7 @@ function loadInitialData() {
     travelers.findById(userID)
     console.log(travelers)
     displayUserInfo()
+    displayPastTrips()
   })
   .catch(err => console.log(err))
 }
@@ -48,3 +49,12 @@ function displayUserInfo() {
   profileCost.innerText = `You have spent ${USDollar.format(trips.calculateTotalCost(userID, destinations))} on trips`;
 }
 
+function displayPastTrips() {
+  // trips.findSortedTripsBy('userID', userID)
+  // filter result to historical DATES only -> use day.js to accurately parse trip.date for comparison against Date.now()
+  // iterate over that array, adding new list items and innerHTML for each element
+  let pastTrips = trips.findSortedTripsBy('userID', userID).filter(trip => trip.status === 'approved')
+
+  console.log(pastTrips)
+  console.log(Date.now())
+}
