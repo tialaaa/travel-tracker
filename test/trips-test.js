@@ -1,10 +1,12 @@
 import chai from 'chai';
 const expect = chai.expect;
 import Trips from '../src/Trips.js';
+import Destinations from '../src/Destinations.js';
 
 describe('Trips class tests', () => {
   let dataArray;
   let tripsRepo;
+  let destinationsRepo;
 
   beforeEach(() => {
     dataArray = [
@@ -111,6 +113,57 @@ describe('Trips class tests', () => {
     ];
 
     tripsRepo = new Trips(dataArray);
+
+    destinationsRepo = new Destinations([
+      {
+        "id": 1,
+        "destination": "Lima, Peru",
+        "estimatedLodgingCostPerDay": 70,
+        "estimatedFlightCostPerPerson": 400,
+        "image": "https://images.unsplash.com/photo-1489171084589-9b5031ebcf9b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2089&q=80",
+        "alt": "overview of city buildings with a clear sky"
+      },
+      {
+        "id": 2,
+        "destination": "Stockholm, Sweden",
+        "estimatedLodgingCostPerDay": 100,
+        "estimatedFlightCostPerPerson": 780,
+        "image": "https://images.unsplash.com/photo-1560089168-6516081f5bf1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
+        "alt": "city with boats on the water during the day time"
+      },
+      {
+        "id": 25,
+        "destination": "New York, New York",
+        "estimatedLodgingCostPerDay": 175,
+        "estimatedFlightCostPerPerson": 200,
+        "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
+        "alt": "people crossing the street during the day surrounded by tall buildings and advertisements"
+      },
+      {
+        "id": 14,
+        "destination": "Marrakesh, Morocco",
+        "estimatedLodgingCostPerDay": 70,
+        "estimatedFlightCostPerPerson": 830,
+        "image": "https://images.unsplash.com/photo-1517821362941-f7f753200fef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1952&q=80",
+        "alt": "people buying oranges and other fruit from a street vendor"
+      },
+      {
+        "id": 33,
+        "destination": "Brussels, Belgium",
+        "estimatedLodgingCostPerDay": 1000,
+        "estimatedFlightCostPerPerson": 110,
+        "image": "https://images.unsplash.com/photo-1559113202-c916b8e44373?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
+        "alt": "brown concrete gate"
+      },
+      {
+        "id": 49,
+        "destination": "Castries, St Lucia",
+        "estimatedLodgingCostPerDay": 650,
+        "estimatedFlightCostPerPerson": 90,
+        "image": "https://images.unsplash.com/photo-1524478075552-c2763ea171b8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1502&q=80",
+        "alt": "aerial photography of rocky mountain under cloudy sky"
+      }
+    ]);
   });
 
   it('should be an instance of Trips class', () => {
@@ -278,19 +331,27 @@ describe('Trips class tests', () => {
     expect(tripsRepo.findTripsBy('userID', 1)).to.be.empty
   });
 
-  // it('should calculate the total spent on past trips by a specific user', () => {
-    
-  // });
+  it('should calculate the total spent on past trips by a specific user', () => {
+    expect(tripsRepo.calculateTotalCost(35, destinationsRepo)).to.equal(4565)
+  });
 
-  // it('should calculate the total spent on past trips by a all users', () => {
-    
-  // });
+  it('should calculate the total spent on past trips by a different user', () => {
+    expect(tripsRepo.calculateTotalCost(44, destinationsRepo)).to.equal(24255)
+  });
 
-  // it('should ', () => {
-    
-  // });
+  it('should return undefined if the userID is not an exact match', () => {
+    expect(tripsRepo.calculateTotalCost('35', destinationsRepo)).to.be.undefined
+  });
 
-    // it('should ', () => {
-    
-  // });
+  it('should return 0 if the userID is not included in the data', () => {
+    expect(tripsRepo.calculateTotalCost(1, destinationsRepo)).to.equal(0)
+  });
+
+  it('should return 0 if the destination is not included in the data', () => {
+    expect(tripsRepo.calculateTotalCost(28, destinationsRepo)).to.equal(0)
+  });
+
+  it('should calculate the total spent on past trips by all users', () => {
+    expect(tripsRepo.calculateTotalCost(undefined, destinationsRepo)).to.equal(31416)
+  });
 })
