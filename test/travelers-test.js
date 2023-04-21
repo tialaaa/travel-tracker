@@ -112,4 +112,14 @@ describe('Travelers class tests', () => {
   it('should return undefined user info if the search key isn\'t an exact match', () => {
     expect(travelerRepo.findById(1).type).to.be.undefined;
   });
+
+  it('should return the current user\'s first name string', () => {
+    travelerRepo.findById(4);
+
+    expect(travelerRepo.printFirstName()).to.equal('Leila');
+  });
+
+  it('should return undefined first name before any user is successfully found', () => {
+    expect(travelerRepo.printFirstName()).to.be.undefined;
+  });
 });
