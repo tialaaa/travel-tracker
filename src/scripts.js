@@ -5,6 +5,8 @@ import { getData, postData } from './fetch-calls.js'
 import Travelers from './Travelers.js'
 import Trips from './Trips.js'
 import Destinations from './Destinations.js'
+const dayjs = require('dayjs')
+dayjs().format()
 
 const greeting = document.getElementById('userGreeting');
 const profileName = document.getElementById('userFullName');
@@ -57,4 +59,6 @@ function displayPastTrips() {
 
   console.log(pastTrips)
   console.log(Date.now())
+  var now = dayjs()
+  console.log(now)
 }
