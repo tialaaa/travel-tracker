@@ -72,7 +72,7 @@ describe('Travelers class tests', () => {
   });
 
   it('should be able to find one user\'s data based on a userID number', () => {
-    expect(travelerRepo.findUserById(4)).to.deep.equal({
+    expect(travelerRepo.findById(4)).to.deep.equal({
       "id": 4,
       "name": "Leila Thebeaud",
       "travelerType": "photographer"
@@ -80,15 +80,15 @@ describe('Travelers class tests', () => {
   });
 
   it('should return undefined if the userID is not an exact match', () => {
-    expect(travelerRepo.findUserById('4')).to.be.undefined
+    expect(travelerRepo.findById('4')).to.be.undefined
   });
 
-  it('should return undefined if the userID is not included in the data', () => {
-    expect(travelerRepo.findUserById(20)).to.be.undefined
+  it('should return undefined if the userID is not included in the data set', () => {
+    expect(travelerRepo.findById(20)).to.be.undefined
   });
 
-  it('should store the found user object in a constructor property', () => {
-    travelerRepo.findUserById(1);
+  it('should store the found user object in a property', () => {
+    travelerRepo.findById(1);
 
     expect(travelerRepo.currentUser).to.deep.equal({
       "id": 1,
@@ -101,22 +101,15 @@ describe('Travelers class tests', () => {
     expect(travelerRepo.currentUser).to.equal(undefined)
   });
 
-  it('should return the current user\'s name based on a given key string', () => {
-    travelerRepo.findUserById(1);
-    expect(travelerRepo.printUserInfo('name')).to.equal('Ham Leadbeater');
+  it('should access the current user\'s name based on a given key', () => {
+    expect(travelerRepo.findById(1).name).to.equal('Ham Leadbeater');
   });
 
-  it('should return the current user\'s traveler type based on a different key string', () => {
-    travelerRepo.findUserById(1);
-    expect(travelerRepo.printUserInfo('travelerType')).to.equal('relaxer');
-  });
-
-  it('should return undefined user info if no user has been identified', () => {
-    expect(travelerRepo.printUserInfo('name')).to.be.undefined;
+  it('should access the current user\'s traveler type based on a different key', () => {
+    expect(travelerRepo.findById(2).travelerType).to.equal('thrill-seeker');
   });
 
   it('should return undefined user info if the search key isn\'t an exact match', () => {
-    travelerRepo.findUserById(1);
-    expect(travelerRepo.printUserInfo('type')).to.be.undefined;
+    expect(travelerRepo.findById(1).type).to.be.undefined;
   });
 });
