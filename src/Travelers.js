@@ -9,6 +9,10 @@ class Travelers {
 
     return this.currentUser;
   };
+
+  printFirstName() {
+    return !this.currentUser ? undefined : this.currentUser.name.split(' ')[0];
+  };
 };
 
 export default Travelers;
