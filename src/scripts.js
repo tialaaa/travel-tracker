@@ -5,6 +5,8 @@ import { getData, postData } from './fetch-calls.js'
 import Travelers from './Travelers.js'
 import Trips from './Trips.js'
 import Destinations from './Destinations.js'
+const dayjs = require('dayjs')
+dayjs().format()
 
 const greeting = document.getElementById('userGreeting');
 const profileName = document.getElementById('userFullName');
@@ -12,7 +14,9 @@ const profileType = document.getElementById('travelerType');
 const profileCost = document.getElementById('annualCost');
 
 let travelers, trips, destinations;
-let userID = 5;
+// let userID = 5;
+let userID = 37;
+// let now = dayjs("2022-01-01")
 
 const USDollar = Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -50,11 +54,16 @@ function displayUserInfo() {
 }
 
 function displayPastTrips() {
-  // trips.findSortedTripsBy('userID', userID)
+  // find using trips.findSortedTripsBy('userID', userID)
   // filter result to historical DATES only -> use day.js to accurately parse trip.date for comparison against Date.now()
   // iterate over that array, adding new list items and innerHTML for each element
-  let pastTrips = trips.findSortedTripsBy('userID', userID).filter(trip => trip.status === 'approved')
+  let pastTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
+    // console.log(trip)
+    let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"])
+    // console.log(parsedDate)
+    
+    return parsedDate < dayjs();
+  })
 
   console.log(pastTrips)
-  console.log(Date.now())
 }

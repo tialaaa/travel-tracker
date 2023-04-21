@@ -2,6 +2,7 @@ import chai from 'chai';
 const expect = chai.expect;
 import Trips from '../src/Trips.js';
 import Destinations from '../src/Destinations.js';
+const dayjs = require('dayjs');
 
 describe('Trips class tests', () => {
   let dataArray;
@@ -75,8 +76,7 @@ describe('Trips class tests', () => {
         "userID": 37,
         "destinationID": 17,
         "travelers": 5,
-        // added 0 to month
-        "date": "2022/05/28",
+        "date": "2022/5/28",
         "duration": 20,
         "status": "approved",
         "suggestedActivities": []
@@ -247,7 +247,7 @@ describe('Trips class tests', () => {
         "userID": 37,
         "destinationID": 17,
         "travelers": 5,
-        "date": "2022/05/28",
+        "date": "2022/5/28",
         "duration": 20,
         "status": "approved",
         "suggestedActivities": []
