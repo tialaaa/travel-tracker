@@ -1,11 +1,11 @@
 class Travelers {
   constructor(arrayOfTravelers) {
-    this.allTravelers = arrayOfTravelers
+    this.allData = arrayOfTravelers
     this.currentUser = undefined
   };
 
   findById(userID) {
-    this.currentUser = this.allTravelers.find(traveler => traveler.id === userID);
+    this.currentUser = this.allData.find(traveler => traveler.id === userID);
 
     return this.currentUser;
   };

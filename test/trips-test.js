@@ -171,7 +171,7 @@ describe('Trips class tests', () => {
   });
 
   it('should store an array of all trip objects', () => {
-    expect(tripsRepo.allTrips).to.deep.equal(dataArray)
+    expect(tripsRepo.allData).to.deep.equal(dataArray)
   });
 
   it('should find all trips for a given userID number', () => {
