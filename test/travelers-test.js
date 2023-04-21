@@ -68,7 +68,7 @@ describe('Travelers class tests', () => {
   });
 
   it('should store an array of all traveler objects', () => {
-    expect(travelerRepo.allTravelers).to.deep.equal(dataArray)
+    expect(travelerRepo.allData).to.deep.equal(dataArray)
   });
 
   it('should be able to find one user\'s data based on a userID number', () => {

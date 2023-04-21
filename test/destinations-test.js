@@ -82,7 +82,7 @@ describe('Destinations class tests', () => {
   });
 
   it('should store an array of all destination objects', () => {
-    expect(destinationsRepo.allDestinations).to.deep.equal(dataArray)
+    expect(destinationsRepo.allData).to.deep.equal(dataArray)
   });
 
   it('should find one destination\'s data based on an ID number', () => {

@@ -1,14 +1,14 @@
 class Destinations {
   constructor(arrayOfDestinations) {
-    this.allDestinations = arrayOfDestinations
+    this.allData = arrayOfDestinations
   };
 
   findById(destinationID) {
-    return this.allDestinations.find(place => place.id === destinationID);
+    return this.allData.find(place => place.id === destinationID);
   };
 
   calculateTripCost(destinationID, numDays, numTravelers) {
-    let currentDestination = this.allDestinations.find(place => place.id === destinationID);
+    let currentDestination = this.allData.find(place => place.id === destinationID);
     
     if (!currentDestination) {
       return 0;
