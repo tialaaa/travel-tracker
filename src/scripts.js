@@ -67,21 +67,7 @@ function displayPastTrips() {
     return parsedDate < dayjs(today);
   });
 
-  pastTrips.forEach(trip => {
-    let currentDest = destinations.findById(trip.destinationID);
-
-    pastTripsCont.innerHTML += `
-      <div class="trip-card">
-        <img src="${currentDest.image}" alt="${currentDest.alt}">
-        <div class="trip-info">
-          <p class="dest-name">${currentDest.destination}</p>
-          <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
-          <p>Days on Trip: ${trip.duration}</p>
-          <p>Traveler Count: ${trip.travelers}</p>
-        </div>
-      </div>
-    `
-  });
+  renderTripCards(pastTripsCont, pastTrips);
 };
 
 function displayUpcomingTrips() {
@@ -96,20 +82,24 @@ function displayUpcomingTrips() {
     return;
   } else {
     messageNoUpcoming.classList.add('hidden');
-    futureTrips.forEach(trip => {
-      let currentDest = destinations.findById(trip.destinationID);
-  
-      futureTripsCont.innerHTML += `
-        <div class="trip-card">
-          <img src="${currentDest.image}" alt="${currentDest.alt}">
-          <div class="trip-info">
-            <p class="dest-name">${currentDest.destination}</p>
-            <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
-            <p>Days on Trip: ${trip.duration}</p>
-            <p>Traveler Count: ${trip.travelers}</p>
-          </div>
-        </div>
-      `
-    });
+    renderTripCards(futureTripsCont, futureTrips);
   };
+};
+
+function renderTripCards(tripsContainer, tripsArray) {
+  tripsArray.forEach(trip => {
+    let currentDest = destinations.findById(trip.destinationID);
+
+    tripsContainer.innerHTML += `
+      <div class="trip-card">
+        <img src="${currentDest.image}" alt="${currentDest.alt}">
+        <div class="trip-info">
+          <p class="dest-name">${currentDest.destination}</p>
+          <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
+          <p>Days on Trip: ${trip.duration}</p>
+          <p>Traveler Count: ${trip.travelers}</p>
+        </div>
+      </div>
+    `
+  });
 };
