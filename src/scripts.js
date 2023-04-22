@@ -5,6 +5,9 @@ import { getData, postData } from './fetch-calls.js'
 import Travelers from './Travelers.js'
 import Trips from './Trips.js'
 import Destinations from './Destinations.js'
+import Glide from '@glidejs/glide'
+// new Glide('.glide').mount()
+
 const dayjs = require('dayjs')
 // dayjs().format()
 
