@@ -6,25 +6,24 @@ import Travelers from './Travelers.js'
 import Trips from './Trips.js'
 import Destinations from './Destinations.js'
 const dayjs = require('dayjs')
-dayjs().format()
+// dayjs().format()
 
 const greeting = document.getElementById('userGreeting');
 const profileName = document.getElementById('userFullName');
 const profileType = document.getElementById('travelerType');
 const profileCost = document.getElementById('annualCost');
+const pastTripsCont = document.getElementById('pastTripsCont');
 
 let travelers, trips, destinations;
-// let userID = 5;
 let userID = 37;
 // let now = dayjs("2022-01-01")
+// console.log(getData('travelers/1'))
 
 const USDollar = Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
   minimumFractionDigits: 0
 });
-
-// console.log(getData('travelers/1'))
 
 window.addEventListener('load', () => {
   loadInitialData();
@@ -44,26 +43,34 @@ function loadInitialData() {
     displayPastTrips()
   })
   .catch(err => console.log(err))
-}
+};
 
 function displayUserInfo() {
   greeting.innerText = `Welcome, ${travelers.printFirstName()}!`;
   profileName.innerText = `Full name: ${travelers.currentUser.name}`;
   profileType.innerText = `Traveler type: ${travelers.currentUser.travelerType}`;
-  profileCost.innerText = `You have spent ${USDollar.format(trips.calculateTotalCost(userID, destinations))} on trips`;
-}
+  profileCost.innerText = `You've spent ${USDollar.format(trips.calculateTotalCost(userID, destinations))} on trips`;
+};
 
 function displayPastTrips() {
-  // find using trips.findSortedTripsBy('userID', userID)
-  // filter result to historical DATES only -> use day.js to accurately parse trip.date for comparison against Date.now()
-  // iterate over that array, adding new list items and innerHTML for each element
   let pastTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
-    // console.log(trip)
-    let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"])
-    // console.log(parsedDate)
-    
+    let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
     return parsedDate < dayjs();
-  })
+  });
 
-  console.log(pastTrips)
-}
+  pastTrips.forEach(trip => {
+    let currentDest = destinations.findById(trip.destinationID);
+
+    pastTripsCont.innerHTML += `
+      <div class="trip-card">
+        <img src="${currentDest.image}" alt="${currentDest.alt}">
+        <div>
+          <p class="dest-name">${currentDest.destination}</p>
+          <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
+          <p>Days on Trip: ${trip.duration}</p>
+          <p>Traveler Count: ${trip.travelers}</p>
+        </div>
+      </div>
+    `
+  });
+};
