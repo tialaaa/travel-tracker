@@ -6,8 +6,9 @@ import Travelers from './Travelers.js'
 import Trips from './Trips.js'
 import Destinations from './Destinations.js'
 import Glide from '@glidejs/glide'
+// import "@glidejs/glide/src/assets/sass/glide.core"
+// import "@glidejs/glide/src/assets/sass/glide.theme"
 // new Glide('.glide').mount()
-
 const dayjs = require('dayjs')
 // dayjs().format()
 
@@ -16,10 +17,13 @@ const profileName = document.getElementById('userFullName');
 const profileType = document.getElementById('travelerType');
 const profileCost = document.getElementById('annualCost');
 const pastTripsCont = document.getElementById('pastTripsCont');
+const futureTripsCont = document.getElementById('futureTripsCont');
+const messageNoUpcoming = document.getElementById('messageNoUpcoming');
 
 let travelers, trips, destinations;
-let userID = 37;
-// let now = dayjs("2022-01-01")
+let userID = 45;
+// variable 'today' for testing use only; remove before final push
+let today = dayjs("2020-05-25")
 // console.log(getData('travelers/1'))
 
 const USDollar = Intl.NumberFormat('en-US', {
@@ -44,6 +48,7 @@ function loadInitialData() {
     console.log(travelers)
     displayUserInfo()
     displayPastTrips()
+    displayUpcomingTrips()
   })
   .catch(err => console.log(err))
 };
@@ -58,7 +63,8 @@ function displayUserInfo() {
 function displayPastTrips() {
   let pastTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
     let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
-    return parsedDate < dayjs();
+    // return parsedDate < dayjs();
+    return parsedDate < dayjs(today);
   });
 
   pastTrips.forEach(trip => {
@@ -67,7 +73,7 @@ function displayPastTrips() {
     pastTripsCont.innerHTML += `
       <div class="trip-card">
         <img src="${currentDest.image}" alt="${currentDest.alt}">
-        <div>
+        <div class="trip-info">
           <p class="dest-name">${currentDest.destination}</p>
           <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
           <p>Days on Trip: ${trip.duration}</p>
@@ -76,4 +82,34 @@ function displayPastTrips() {
       </div>
     `
   });
+};
+
+function displayUpcomingTrips() {
+  let futureTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
+    let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
+    // return parsedDate > dayjs();
+    return parsedDate > dayjs(today);
+  });
+
+  if (futureTrips.length === 0) {
+    messageNoUpcoming.classList.remove('hidden');
+    return;
+  } else {
+    messageNoUpcoming.classList.add('hidden');
+    futureTrips.forEach(trip => {
+      let currentDest = destinations.findById(trip.destinationID);
+  
+      futureTripsCont.innerHTML += `
+        <div class="trip-card">
+          <img src="${currentDest.image}" alt="${currentDest.alt}">
+          <div class="trip-info">
+            <p class="dest-name">${currentDest.destination}</p>
+            <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
+            <p>Days on Trip: ${trip.duration}</p>
+            <p>Traveler Count: ${trip.travelers}</p>
+          </div>
+        </div>
+      `
+    });
+  };
 };
