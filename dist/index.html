@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.core.min.css">
-  <!-- <link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.theme.min.css"> -->
+  <!-- <link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.core.min.css">
+  <link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.theme.min.css"> -->
   <title>Travel Tracker</title>
 </head>
 <body>
@@ -28,15 +28,30 @@
     <section>
       <h2>Your upcoming trips</h2>
       <p id="messageNoUpcoming">Oh no, you don't have any trips booked.</p>
+      <div class="" id="future-trips">
+        <div class="">
+          <div class="container-trips" id="futureTripsCont">
+          </div>
+        </div>
+      </div>
       <!-- placeholder -->
     </section>
     <section>
       <h2>Your past trips</h2>
-      <div class="glide-past-trips">
-        <div class="container-trips" id="pastTripsCont">
+        <div class="glide slider glide--swipeable glife-ltr glide-slider" id="past-trips">
+          <div class="glide__track slider__track" data-glide-el="track">
+            <div class="container-trips glide__slides slider__slides" id="pastTripsCont">
+            </div>
+          </div>
         </div>
-      </div>
-      <!-- placeholder -->
+      <!-- remove all GLIDE classes if not used
+      <div class="glide slider glide--swipeable glife-ltr glide-slider" id="past-trips">
+        <div class="glide__track slider__track" data-glide-el="track">
+          <ul class="container-trips glide__slides slider__slides" id="pastTripsCont">
+    
+          </ul>
+        </div>
+      </div> -->
     </section>
   </section>
 
