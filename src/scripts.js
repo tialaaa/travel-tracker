@@ -19,11 +19,22 @@ const profileCost = document.getElementById('annualCost');
 const pastTripsCont = document.getElementById('pastTripsCont');
 const futureTripsCont = document.getElementById('futureTripsCont');
 const messageNoUpcoming = document.getElementById('messageNoUpcoming');
+const buttonBookTrip = document.getElementById('bookTrip');
+const dateInputStart = document.getElementById("startDate");
+const dateInputEnd = document.getElementById("endDate");
+
+// variable 'today' for testing use only; remove before final push
+let today = dayjs("2020-05-25");
+let todayInputFormat = today.format('YYYY-MM-DD')
+let tomorrowInputFormat = today.add(1,'day').format('YYYY-MM-DD')
+
+dateInputStart.value = todayInputFormat;
+dateInputEnd.value = tomorrowInputFormat;
+dateInputStart.setAttribute("min", todayInputFormat);
+dateInputEnd.setAttribute("min", tomorrowInputFormat);
 
 let travelers, trips, destinations;
-let userID = 45;
-// variable 'today' for testing use only; remove before final push
-let today = dayjs("2020-05-25")
+let userID = 5;
 // console.log(getData('travelers/1'))
 
 const USDollar = Intl.NumberFormat('en-US', {
