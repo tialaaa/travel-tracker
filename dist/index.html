@@ -13,71 +13,78 @@
   <title>Travel Tracker</title>
 </head>
 <body>
-  <section class="container-left">
-    <h1 id="userGreeting"></h1>
-    <article>
-      <h2 class="lets-book">Let's book a trip!</h2>
-      <form id="requestForm" aria-label="New trip request">
-        <div>
-          <label for="destination">Where to?</label>
-          <select id="destinationList" name="destination" required></select>
-        </div>
-        <div>
-          <label for="startDate">Depart:</label>
-          <input type="date" id="startDate" name="startDate" value="" min="" required>
-        </div>
-        <div>
-          <label for="endDate">Return:</label>
-          <input type="date" id="endDate" name="endDate" min="" required>
-        </div>
-        <div>
-          <label for="travelerCount">How many travelers? </label>
-          <input type="number" id="travelerCount" name="travelerCount" min="1" max="100" required>
-        </div>
-        <div class="estimate" id="estimateCost">   </div>
-        <button type="submit" class="button-submit" id="submitRequest" tabindex="0">Submit</button>
-      </form>
-    </article>
-    <div class="user-profile">
-      <h3>Your Profile</h3>
-      <ul class="user-info">
-        <li id="userFullName"></li>
-        <li id="travelerType"></li>
-        <li id="annualCost"></li>
-      </ul>
-    </div>
-  </section>
-  <section class="container-right">
-    <section class="trips-sections upcoming">
-      <h2>Your Upcoming Trips</h2>
-      <p class="hidden" id="messageNoUpcoming">Oh no, you don't have any trips booked.</p>
-      <div class="" id="future-trips">
-        <div class="">
-          <div class="container-trips" id="futureTripsCont">
+  <header>
+    <span class="heading-span">
+      <h1>Adventure Awaits</h1>
+      <img class="icon" src="./images/hot-air-balloon-black-2.png" alt="hot air balloon icon">
+      <p>The #1 service to book and manage your travel plans</p>
+    </span>
+  </header>
+  <div class="container-main">
+    <aside class="container-left">
+      <h2 id="userGreeting"></h2>
+      <article>
+        <h3 class="lets-book">Let's book a trip!</h3>
+        <form id="requestForm" aria-label="New trip request">
+          <div>
+            <label for="destinationList">Where to?</label>
+            <select id="destinationList" name="destinationList" required></select>
           </div>
-        </div>
+          <div>
+            <label for="startDate">Depart:</label>
+            <input type="date" id="startDate" name="startDate" value="" min="" required>
+          </div>
+          <div>
+            <label for="endDate">Return:</label>
+            <input type="date" id="endDate" name="endDate" min="" required>
+          </div>
+          <div>
+            <label for="travelerCount">How many travelers? </label>
+            <input type="number" id="travelerCount" name="travelerCount" min="1" max="100" required>
+          </div>
+          <div class="estimate" id="estimateCost">   </div>
+          <button type="submit" class="button-submit" id="submitRequest" tabindex="0">Submit</button>
+        </form>
+      </article>
+      <div class="user-profile">
+        <h4>Your Profile</h4>
+        <ul class="user-info">
+          <li id="userFullName"></li>
+          <li id="travelerType"></li>
+          <li id="annualCost"></li>
+        </ul>
       </div>
-    </section>
-    <section class="trips-sections past">
-      <h2>Your Past Trips</h2>
-        <div class="glide slider glide--swipeable glife-ltr glide-slider" id="past-trips">
-          <div class="glide__track slider__track" data-glide-el="track">
-            <div class="container-trips glide__slides slider__slides" id="pastTripsCont">
+    </aside>
+    <main class="container-right">
+      <section class="trips-sections upcoming">
+        <h3>Your Upcoming Trips</h3>
+        <p class="hidden" id="messageNoUpcoming">Oh no, you don't have any trips booked.</p>
+        <div class="" id="future-trips">
+          <div class="">
+            <div class="container-trips" id="futureTripsCont">
             </div>
           </div>
         </div>
-      <!-- remove all GLIDE classes if not used
-      <div class="glide slider glide--swipeable glife-ltr glide-slider" id="past-trips">
-        <div class="glide__track slider__track" data-glide-el="track">
-          <ul class="container-trips glide__slides slider__slides" id="pastTripsCont">
-    
-          </ul>
-        </div>
-      </div> -->
-    </section>
-  </section>
-
-
+      </section>
+      <section class="trips-sections past">
+        <h3>Your Past Trips</h3>
+          <div class="glide slider glide--swipeable glife-ltr glide-slider" id="past-trips">
+            <div class="glide__track slider__track" data-glide-el="track">
+              <div class="container-trips glide__slides slider__slides" id="pastTripsCont">
+              </div>
+            </div>
+          </div>
+        <!-- remove all GLIDE classes if not used
+        <div class="glide slider glide--swipeable glife-ltr glide-slider" id="past-trips">
+          <div class="glide__track slider__track" data-glide-el="track">
+            <ul class="container-trips glide__slides slider__slides" id="pastTripsCont">
+      
+            </ul>
+          </div>
+        </div> -->
+      </section>
+    </main>
+  </div>
 
   <!-- Do not include the scripts.js or class files here - it is done by the webpack server -->
   <script src="bundle.js"></script>
