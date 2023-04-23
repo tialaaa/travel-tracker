@@ -102,6 +102,8 @@ requestForm.addEventListener('submit', (e) => {
     console.log('Validate successful')
     // confirm success to the user
     resetForm();
+    estimateCost.innerHTML = ``;
+    estimateCost.classList.remove('shown');
 
     Promise.all([postData('trips', successfulRequest)])
       .then(() => {
