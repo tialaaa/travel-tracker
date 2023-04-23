@@ -21,9 +21,11 @@ const futureTripsCont = document.getElementById('futureTripsCont');
 const messageNoUpcoming = document.getElementById('messageNoUpcoming');
 const buttonBookTrip = document.getElementById('bookTrip');
 const requestForm = document.getElementById('requestForm');
-const formDatalist = document.getElementById("destinationList");
-const dateInputStart = document.getElementById("startDate");
-const dateInputEnd = document.getElementById("endDate");
+const submitRequest = document.getElementById('submitRequest');
+const formList = document.getElementById("destinationList");
+const formStartDate = document.getElementById("startDate");
+const formEndDate = document.getElementById("endDate");
+const estimateCost = document.getElementById("estimateCost");
 
 // variable 'today' for testing use only; remove before final push
 let today = dayjs("2020-05-25");
@@ -67,29 +69,38 @@ function loadInitialData() {
 function resetForm() {
   requestForm.reset();
   populateFormDates();
-  populateFormDatalist();
+  populateFormList();
 };
 
 function populateFormDates() {
-  dateInputStart.value = todayInputFormat;
-  dateInputEnd.value = tomorrowInputFormat;
-  dateInputStart.setAttribute("min", todayInputFormat);
-  dateInputEnd.setAttribute("min", tomorrowInputFormat);
+  formStartDate.value = todayInputFormat;
+  formEndDate.value = tomorrowInputFormat;
+  formStartDate.setAttribute("min", todayInputFormat);
+  formEndDate.setAttribute("min", tomorrowInputFormat);
 };
 
-function populateFormDatalist() {
+function populateFormList() {
   destinations.allData.forEach(location => {
-    formDatalist.innerHTML += `
-      <option value="${location.destination}">
+    formList.innerHTML += `
+      <option value="${location.destination}">${location.destination}</option>
     `
   });
 };
+
+requestForm.addEventListener('change', (e) => {
+  let inputs = validateRequest();
+  let currentEstimate = destinations.calculateTripCost(inputs.destinationID, inputs.duration, inputs.travelers);
+
+  estimateCost.classList.add('shown');
+  estimateCost.innerHTML = `Cost Estimate: <strong>${USDollar.format(currentEstimate)}</strong>`;
+});
 
 requestForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
   if (validateRequest()) {
     console.log('Validate successful')
+    // confirm success to the user
     resetForm();
 
     Promise.all([postData('trips', successfulRequest)])
@@ -186,7 +197,7 @@ function renderTripCards(tripsContainer, tripsArray) {
           <p class="dest-name">${currentDest.destination}</p>
           <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
           <p>Days on Trip: ${trip.duration}</p>
-          <p>Traveler Count: ${trip.travelers}</p>
+          <p>Travelers: ${trip.travelers}</p>
         </div>
       </div>
     `
