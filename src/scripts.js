@@ -93,7 +93,7 @@ requestForm.addEventListener('change', (e) => {
   let currentEstimate = destinations.calculateTripCost(inputs.destinationID, inputs.duration, inputs.travelers);
 
   estimateCost.classList.add('shown');
-  estimateCost.innerHTML = `Cost Estimate: <strong>${USDollar.format(currentEstimate)}</strong>`;
+  estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
 });
 
 requestForm.addEventListener('submit', (e) => {
@@ -203,13 +203,13 @@ function renderTripCards(tripsContainer, tripsArray) {
 
     tripsContainer.innerHTML += `
       <div class="trip-card">
+        <span class="status-flag ${hiddenStatus}">Status: ${trip.status}</span>
         <img src="${currentDest.image}" alt="${currentDest.alt}">
         <div class="trip-info">
           <h4 class="dest-name">${currentDest.destination}</h4>
           <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
           <p>Days on Trip: ${trip.duration}</p>
           <p>Travelers: ${trip.travelers}</p>
-          <span class="${hiddenStatus}">Status: ${trip.status}</span>
         </div>
       </div>
     `
