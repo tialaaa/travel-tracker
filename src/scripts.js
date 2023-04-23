@@ -20,6 +20,8 @@ const pastTripsCont = document.getElementById('pastTripsCont');
 const futureTripsCont = document.getElementById('futureTripsCont');
 const messageNoUpcoming = document.getElementById('messageNoUpcoming');
 const buttonBookTrip = document.getElementById('bookTrip');
+const requestForm = document.getElementById('requestForm');
+const formDatalist = document.getElementById("destinationList");
 const dateInputStart = document.getElementById("startDate");
 const dateInputEnd = document.getElementById("endDate");
 
@@ -28,13 +30,8 @@ let today = dayjs("2020-05-25");
 let todayInputFormat = today.format('YYYY-MM-DD')
 let tomorrowInputFormat = today.add(1,'day').format('YYYY-MM-DD')
 
-dateInputStart.value = todayInputFormat;
-dateInputEnd.value = tomorrowInputFormat;
-dateInputStart.setAttribute("min", todayInputFormat);
-dateInputEnd.setAttribute("min", tomorrowInputFormat);
-
-let travelers, trips, destinations;
-let userID = 5;
+let travelers, trips, destinations, successfulRequest;
+let userID = 30;
 // console.log(getData('travelers/1'))
 
 const USDollar = Intl.NumberFormat('en-US', {
@@ -45,6 +42,7 @@ const USDollar = Intl.NumberFormat('en-US', {
 
 window.addEventListener('load', () => {
   loadInitialData();
+  populateFormDates();
 });
 
 function loadInitialData() {
@@ -57,11 +55,91 @@ function loadInitialData() {
   .then(() => {
     travelers.findById(userID)
     console.log(travelers)
+    resetForm()
     displayUserInfo()
     displayPastTrips()
     displayUpcomingTrips()
+    console.log(trips)
   })
   .catch(err => console.log(err))
+};
+
+function resetForm() {
+  requestForm.reset();
+  populateFormDates();
+  populateFormDatalist();
+};
+
+function populateFormDates() {
+  dateInputStart.value = todayInputFormat;
+  dateInputEnd.value = tomorrowInputFormat;
+  dateInputStart.setAttribute("min", todayInputFormat);
+  dateInputEnd.setAttribute("min", tomorrowInputFormat);
+};
+
+function populateFormDatalist() {
+  destinations.allData.forEach(location => {
+    formDatalist.innerHTML += `
+      <option value="${location.destination}">
+    `
+  });
+};
+
+requestForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  if (validateRequest()) {
+    console.log('Validate successful')
+    resetForm();
+
+    Promise.all([postData('trips', successfulRequest)])
+      .then(() => {
+        getData('trips')
+        .then(responseJson => {
+          console.log(responseJson)
+          trips = new Trips(responseJson.trips)
+        })
+        // .then(() => {
+        // })
+        .catch(err => console.log(err))
+      });
+  };
+
+});
+
+function validateRequest() {
+  const requestData = new FormData(requestForm);
+  const chosenDest = destinations.allData.find(place => place.destination === requestData.get('destination'));
+  const chosenCount = requestData.get('travelerCount');
+  let start = dayjs(requestData.get('startDate'), ["YYYY-MM-DD"]);
+  let end = dayjs(requestData.get('endDate'), ["YYYY-MM-DD"]);
+  const chosenDuration = end.diff(start, 'day');
+
+  if (!chosenDest) {
+    alert('Destination not valid. Please choose again.');
+    return false;
+  };
+
+  if (chosenDuration <= 0) {
+    alert('End date must be after start date. Please check your calendar selections.');
+    return false;
+  };
+
+  if (chosenCount <= 0 || isNaN(chosenCount)) {
+    alert('Trips must have at least one traveler. Please check your selection.');
+    return false;
+  };
+
+  return successfulRequest =  {
+    id: Date.now(),
+    userID: userID,
+    destinationID: chosenDest.id,
+    travelers: parseInt(chosenCount),
+    date: start.format('YYYY/MM/DD'),
+    duration: chosenDuration,
+    status: 'pending',
+    suggestedActivities: []
+  };
 };
 
 function displayUserInfo() {
