@@ -246,7 +246,9 @@ function renderTripCards(tripsContainer, tripsArray) {
     tripsContainer.innerHTML += `
       <div class="trip-card">
         <span class="status-flag ${hiddenStatus}">Status: ${trip.status}</span>
-        <img src="${currentDest.image}" alt="${currentDest.alt}">
+        <div class="image-cont">
+          <img src="${currentDest.image}" alt="${currentDest.alt}">
+        </div>
         <div class="trip-info">
           <h4 class="dest-name">${currentDest.destination}</h4>
           <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
