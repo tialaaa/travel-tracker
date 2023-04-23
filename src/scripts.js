@@ -1,6 +1,7 @@
 import './css/styles.css';
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/turing-logo.png'
+import './images/hot-air-balloon-black-2.png'
 import { getData, postData } from './fetch-calls.js'
 import Travelers from './Travelers.js'
 import Trips from './Trips.js'
@@ -33,7 +34,7 @@ let todayInputFormat = today.format('YYYY-MM-DD')
 let tomorrowInputFormat = today.add(1,'day').format('YYYY-MM-DD')
 
 let travelers, trips, destinations, successfulRequest;
-let userID = 30;
+let userID = 5;
 // console.log(getData('travelers/1'))
 
 const USDollar = Intl.NumberFormat('en-US', {
@@ -195,7 +196,7 @@ function renderTripCards(tripsContainer, tripsArray) {
       <div class="trip-card">
         <img src="${currentDest.image}" alt="${currentDest.alt}">
         <div class="trip-info">
-          <p class="dest-name">${currentDest.destination}</p>
+          <h4 class="dest-name">${currentDest.destination}</h4>
           <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
           <p>Days on Trip: ${trip.duration}</p>
           <p>Travelers: ${trip.travelers}</p>
