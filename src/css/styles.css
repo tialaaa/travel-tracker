@@ -257,7 +257,7 @@ img {
 .button-submit:after {
   content: '';
   position: absolute;
-  border: px solid rgb(173, 2, 110);
+  border: 1px solid rgb(173, 2, 110);
   bottom: 4px;
   left: 4px;
   width: calc(100% - 1px);
