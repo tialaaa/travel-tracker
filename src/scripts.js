@@ -23,10 +23,10 @@ const messageNoUpcoming = document.getElementById('messageNoUpcoming');
 const buttonBookTrip = document.getElementById('bookTrip');
 const requestForm = document.getElementById('requestForm');
 const submitRequest = document.getElementById('submitRequest');
-const formList = document.getElementById("destinationList");
-const formStartDate = document.getElementById("startDate");
-const formEndDate = document.getElementById("endDate");
-const estimateCost = document.getElementById("estimateCost");
+const formList = document.getElementById('destinationList');
+const formStartDate = document.getElementById('startDate');
+const formEndDate = document.getElementById('endDate');
+const estimateCost = document.getElementById('estimateCost');
 
 // variable 'today' for testing use only; remove before final push
 let today = dayjs("2020-05-25");
@@ -122,7 +122,7 @@ requestForm.addEventListener('submit', (e) => {
 
 function validateRequest() {
   const requestData = new FormData(requestForm);
-  const chosenDest = destinations.allData.find(place => place.destination === requestData.get('destination'));
+  const chosenDest = destinations.allData.find(place => place.destination === requestData.get('destinationList'));
   const chosenCount = requestData.get('travelerCount');
   let start = dayjs(requestData.get('startDate'), ["YYYY-MM-DD"]);
   let end = dayjs(requestData.get('endDate'), ["YYYY-MM-DD"]);
