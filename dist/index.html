@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.theme.min.css"> -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
   <title>Travel Tracker</title>
 </head>
 <body>
@@ -48,9 +48,9 @@
     </div>
   </section>
   <section class="container-right">
-    <section class="trips-sections">
+    <section class="trips-sections upcoming">
       <h2>Your Upcoming Trips</h2>
-      <p id="messageNoUpcoming">Oh no, you don't have any trips booked.</p>
+      <p class="hidden" id="messageNoUpcoming">Oh no, you don't have any trips booked.</p>
       <div class="" id="future-trips">
         <div class="">
           <div class="container-trips" id="futureTripsCont">
@@ -58,7 +58,7 @@
         </div>
       </div>
     </section>
-    <section class="trips-sections">
+    <section class="trips-sections past">
       <h2>Your Past Trips</h2>
         <div class="glide slider glide--swipeable glife-ltr glide-slider" id="past-trips">
           <div class="glide__track slider__track" data-glide-el="track">
