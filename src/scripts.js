@@ -100,7 +100,6 @@ requestForm.addEventListener('submit', (e) => {
 
   if (validateRequest()) {
     console.log('Validate successful')
-    // confirm success to the user
     resetForm();
     estimateCost.innerHTML = ``;
     estimateCost.classList.remove('shown');
@@ -111,13 +110,13 @@ requestForm.addEventListener('submit', (e) => {
         .then(responseJson => {
           console.log(responseJson)
           trips = new Trips(responseJson.trips)
+          alert('Your trip request has been submitted for agent approval.')
         })
         // .then(() => {
         // })
         .catch(err => console.log(err))
       });
   };
-
 });
 
 function validateRequest() {
