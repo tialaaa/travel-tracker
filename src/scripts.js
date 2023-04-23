@@ -1,6 +1,7 @@
 import './css/styles.css';
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/turing-logo.png'
+import './images/hot-air-balloon-black-2.png'
 import { getData, postData } from './fetch-calls.js'
 import Travelers from './Travelers.js'
 import Trips from './Trips.js'
@@ -22,10 +23,10 @@ const messageNoUpcoming = document.getElementById('messageNoUpcoming');
 const buttonBookTrip = document.getElementById('bookTrip');
 const requestForm = document.getElementById('requestForm');
 const submitRequest = document.getElementById('submitRequest');
-const formList = document.getElementById("destinationList");
-const formStartDate = document.getElementById("startDate");
-const formEndDate = document.getElementById("endDate");
-const estimateCost = document.getElementById("estimateCost");
+const formList = document.getElementById('destinationList');
+const formStartDate = document.getElementById('startDate');
+const formEndDate = document.getElementById('endDate');
+const estimateCost = document.getElementById('estimateCost');
 
 // variable 'today' for testing use only; remove before final push
 let today = dayjs("2020-05-25");
@@ -33,7 +34,7 @@ let todayInputFormat = today.format('YYYY-MM-DD')
 let tomorrowInputFormat = today.add(1,'day').format('YYYY-MM-DD')
 
 let travelers, trips, destinations, successfulRequest;
-let userID = 30;
+let userID = 5;
 // console.log(getData('travelers/1'))
 
 const USDollar = Intl.NumberFormat('en-US', {
@@ -92,7 +93,7 @@ requestForm.addEventListener('change', (e) => {
   let currentEstimate = destinations.calculateTripCost(inputs.destinationID, inputs.duration, inputs.travelers);
 
   estimateCost.classList.add('shown');
-  estimateCost.innerHTML = `Cost Estimate: <strong>${USDollar.format(currentEstimate)}</strong>`;
+  estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
 });
 
 requestForm.addEventListener('submit', (e) => {
@@ -111,6 +112,7 @@ requestForm.addEventListener('submit', (e) => {
           console.log(responseJson)
           trips = new Trips(responseJson.trips)
           alert('Your trip request has been submitted for agent approval.')
+          displayUpcomingTrips()
         })
         // .then(() => {
         // })
@@ -121,7 +123,7 @@ requestForm.addEventListener('submit', (e) => {
 
 function validateRequest() {
   const requestData = new FormData(requestForm);
-  const chosenDest = destinations.allData.find(place => place.destination === requestData.get('destination'));
+  const chosenDest = destinations.allData.find(place => place.destination === requestData.get('destinationList'));
   const chosenCount = requestData.get('travelerCount');
   let start = dayjs(requestData.get('startDate'), ["YYYY-MM-DD"]);
   let end = dayjs(requestData.get('endDate'), ["YYYY-MM-DD"]);
@@ -183,19 +185,28 @@ function displayUpcomingTrips() {
     return;
   } else {
     messageNoUpcoming.classList.add('hidden');
-    renderTripCards(futureTripsCont, futureTrips);
   };
+
+  renderTripCards(futureTripsCont, futureTrips);
 };
 
 function renderTripCards(tripsContainer, tripsArray) {
+  tripsContainer.innerHTML = '';
+
   tripsArray.forEach(trip => {
     let currentDest = destinations.findById(trip.destinationID);
+    let hiddenStatus;
+
+    if (trip.status !== 'pending') {
+      hiddenStatus = 'hidden'
+    };
 
     tripsContainer.innerHTML += `
       <div class="trip-card">
+        <span class="status-flag ${hiddenStatus}">Status: ${trip.status}</span>
         <img src="${currentDest.image}" alt="${currentDest.alt}">
         <div class="trip-info">
-          <p class="dest-name">${currentDest.destination}</p>
+          <h4 class="dest-name">${currentDest.destination}</h4>
           <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
           <p>Days on Trip: ${trip.duration}</p>
           <p>Travelers: ${trip.travelers}</p>
