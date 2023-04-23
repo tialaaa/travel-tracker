@@ -112,6 +112,7 @@ requestForm.addEventListener('submit', (e) => {
           console.log(responseJson)
           trips = new Trips(responseJson.trips)
           alert('Your trip request has been submitted for agent approval.')
+          displayUpcomingTrips()
         })
         // .then(() => {
         // })
@@ -184,13 +185,21 @@ function displayUpcomingTrips() {
     return;
   } else {
     messageNoUpcoming.classList.add('hidden');
-    renderTripCards(futureTripsCont, futureTrips);
   };
+
+  renderTripCards(futureTripsCont, futureTrips);
 };
 
 function renderTripCards(tripsContainer, tripsArray) {
+  tripsContainer.innerHTML = '';
+
   tripsArray.forEach(trip => {
     let currentDest = destinations.findById(trip.destinationID);
+    let hiddenStatus;
+
+    if (trip.status !== 'pending') {
+      hiddenStatus = 'hidden'
+    };
 
     tripsContainer.innerHTML += `
       <div class="trip-card">
@@ -200,6 +209,7 @@ function renderTripCards(tripsContainer, tripsArray) {
           <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
           <p>Days on Trip: ${trip.duration}</p>
           <p>Travelers: ${trip.travelers}</p>
+          <span class="${hiddenStatus}">Status: ${trip.status}</span>
         </div>
       </div>
     `
