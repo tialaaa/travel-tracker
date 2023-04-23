@@ -6,12 +6,8 @@ import { getData, postData } from './fetch-calls.js'
 import Travelers from './Travelers.js'
 import Trips from './Trips.js'
 import Destinations from './Destinations.js'
-import Glide from '@glidejs/glide'
-// import "@glidejs/glide/src/assets/sass/glide.core"
-// import "@glidejs/glide/src/assets/sass/glide.theme"
-// new Glide('.glide').mount()
+// import Glide from '@glidejs/glide'
 const dayjs = require('dayjs')
-// dayjs().format()
 
 const loginPage = document.getElementById('containerLogin');
 const mainPage = document.getElementById('containerMain');
@@ -36,8 +32,7 @@ let todayInputFormat = today.format('YYYY-MM-DD')
 let tomorrowInputFormat = today.add(1,'day').format('YYYY-MM-DD')
 
 let travelers, trips, destinations, successfulRequest;
-let userID = 5;
-// console.log(getData('travelers/1'))
+let userID;
 
 const USDollar = Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -53,10 +48,6 @@ window.addEventListener('load', () => {
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   validateLogin();
-
-  // if successful, switch the pages & call these functions
-  loadInitialData();
-  populateFormDates();
 });
 
 function validateLogin() {
@@ -69,8 +60,9 @@ function validateLogin() {
   Promise.all([getData(`travelers/${submittedNum}`)])
     .then(data => {
       if (!validateUserID(data, submittedNum, submittedString) || !validatePassword(submittedPass)) {
-        return;
+        return false;
       } else {
+        userID = submittedNum;
         loginPage.classList.add('hidden');
         mainPage.classList.remove('hidden');
         loadInitialData();
@@ -78,8 +70,6 @@ function validateLogin() {
       };
     })
     .catch(err => console.log(err))
-  
-  
 };
 
 function validatePassword(passToCheck) {
@@ -92,13 +82,7 @@ function validatePassword(passToCheck) {
 };
 
 function validateUserID(responseArray, number, string) {
-  if (responseArray[0].message === `No traveler found with an id of ${number}`) {
-    console.log('number wrong')
-    alert('Incorrect username');
-    loginForm.reset();
-    return false;
-  } else if (string !== 'traveler') {
-    console.log('string wrong')
+  if (responseArray[0].message === `No traveler found with an id of ${number}` || string !== 'traveler') {
     alert('Incorrect username');
     loginForm.reset();
     return false;
