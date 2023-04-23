@@ -13,6 +13,9 @@ import Glide from '@glidejs/glide'
 const dayjs = require('dayjs')
 // dayjs().format()
 
+const loginPage = document.getElementById('containerLogin');
+const mainPage = document.getElementById('containerMain');
+const loginForm = document.getElementById('loginForm');
 const greeting = document.getElementById('userGreeting');
 const profileName = document.getElementById('userFullName');
 const profileType = document.getElementById('travelerType');
@@ -22,7 +25,6 @@ const futureTripsCont = document.getElementById('futureTripsCont');
 const messageNoUpcoming = document.getElementById('messageNoUpcoming');
 const buttonBookTrip = document.getElementById('bookTrip');
 const requestForm = document.getElementById('requestForm');
-const submitRequest = document.getElementById('submitRequest');
 const formList = document.getElementById('destinationList');
 const formStartDate = document.getElementById('startDate');
 const formEndDate = document.getElementById('endDate');
@@ -44,28 +46,84 @@ const USDollar = Intl.NumberFormat('en-US', {
 });
 
 window.addEventListener('load', () => {
+  loginPage.classList.remove('hidden');
+  mainPage.classList.add('hidden');
+});
+
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  validateLogin();
+
+  // if successful, switch the pages & call these functions
   loadInitialData();
   populateFormDates();
 });
 
+function validateLogin() {
+  const loginData = new FormData(loginForm);
+  const submittedPass = loginData.get('password');
+  const submittedID = loginData.get('username').split('');
+  const submittedString = submittedID.slice(0, 8).join('');
+  const submittedNum = parseInt(submittedID.slice(8).join(''));
+
+  Promise.all([getData(`travelers/${submittedNum}`)])
+    .then(data => {
+      if (!validateUserID(data, submittedNum, submittedString) || !validatePassword(submittedPass)) {
+        return;
+      } else {
+        loginPage.classList.add('hidden');
+        mainPage.classList.remove('hidden');
+        loadInitialData();
+        populateFormDates();
+      };
+    })
+    .catch(err => console.log(err))
+  
+  
+};
+
+function validatePassword(passToCheck) {
+  if (passToCheck !== 'travel') {
+    alert('Incorrect password');
+    loginForm.reset();
+    return false;
+  };
+  return true;
+};
+
+function validateUserID(responseArray, number, string) {
+  if (responseArray[0].message === `No traveler found with an id of ${number}`) {
+    console.log('number wrong')
+    alert('Incorrect username');
+    loginForm.reset();
+    return false;
+  } else if (string !== 'traveler') {
+    console.log('string wrong')
+    alert('Incorrect username');
+    loginForm.reset();
+    return false;
+  };
+  return true;
+};
+
 function loadInitialData() {
   Promise.all([getData('travelers'), getData('trips'), getData('destinations')])
-  .then(data => {
-    travelers = new Travelers(data[0].travelers);
-    trips = new Trips(data[1].trips);
-    destinations = new Destinations(data[2].destinations);
-  })
-  .then(() => {
-    travelers.findById(userID)
-    console.log(travelers)
-    resetForm()
-    displayUserInfo()
-    displayPastTrips()
-    displayUpcomingTrips()
-    console.log(trips)
-  })
-  .catch(err => console.log(err))
-};
+    .then(data => {
+      travelers = new Travelers(data[0].travelers);
+      trips = new Trips(data[1].trips);
+      destinations = new Destinations(data[2].destinations);
+    })
+    .then(() => {
+      travelers.findById(userID)
+      console.log(travelers)
+      resetForm()
+      displayUserInfo()
+      displayPastTrips()
+      displayUpcomingTrips()
+      console.log(trips)
+    })
+    .catch(err => console.log(err))
+  };
 
 function resetForm() {
   requestForm.reset();
