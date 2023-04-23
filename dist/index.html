@@ -31,16 +31,16 @@
             <select id="destinationList" name="destinationList" required></select>
           </div>
           <div>
+            <label for="travelerCount">How many travelers? </label>
+            <input type="number" id="travelerCount" name="travelerCount" value="1" min="1" max="100" required>
+          </div>
+          <div>
             <label for="startDate">Depart:</label>
             <input type="date" id="startDate" name="startDate" value="" min="" required>
           </div>
           <div>
             <label for="endDate">Return:</label>
             <input type="date" id="endDate" name="endDate" min="" required>
-          </div>
-          <div>
-            <label for="travelerCount">How many travelers? </label>
-            <input type="number" id="travelerCount" name="travelerCount" min="1" max="100" required>
           </div>
           <div class="estimate" id="estimateCost">   </div>
           <button type="submit" class="button-submit" id="submitRequest" tabindex="0">Submit</button>
