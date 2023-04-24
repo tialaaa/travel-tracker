@@ -333,26 +333,26 @@ describe('Trips class tests', () => {
   });
 
   it('should calculate the total spent on past trips by a specific user', () => {
-    expect(tripsRepo.calculateTotalCost(35, destinationsRepo)).to.equal(4565)
+    expect(tripsRepo.calcTotalCost(35, destinationsRepo)).to.equal(4565)
   });
 
   it('should calculate the total spent on past trips by a different user', () => {
-    expect(tripsRepo.calculateTotalCost(44, destinationsRepo)).to.equal(24255)
+    expect(tripsRepo.calcTotalCost(44, destinationsRepo)).to.equal(24255)
   });
 
   it('should return undefined if the userID is not an exact match', () => {
-    expect(tripsRepo.calculateTotalCost('35', destinationsRepo)).to.be.undefined
+    expect(tripsRepo.calcTotalCost('35', destinationsRepo)).to.be.undefined
   });
 
   it('should return 0 if the userID is not included in the data', () => {
-    expect(tripsRepo.calculateTotalCost(1, destinationsRepo)).to.equal(0)
+    expect(tripsRepo.calcTotalCost(1, destinationsRepo)).to.equal(0)
   });
 
   it('should return 0 if the destination is not included in the data', () => {
-    expect(tripsRepo.calculateTotalCost(28, destinationsRepo)).to.equal(0)
+    expect(tripsRepo.calcTotalCost(28, destinationsRepo)).to.equal(0)
   });
 
   it('should calculate the total spent on past trips by all users', () => {
-    expect(tripsRepo.calculateTotalCost(undefined, destinationsRepo)).to.equal(31416)
+    expect(tripsRepo.calcTotalCost(undefined, destinationsRepo)).to.equal(31416)
   });
 })

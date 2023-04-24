@@ -129,10 +129,10 @@ describe('Destinations class tests', () => {
   });
 
   it('should calculate the estimated cost for a future trip based on a number of days and number of travelers', () => {
-    expect(destinationsRepo.calculateTripCost(8, 10, 2)).to.equal(3575)
+    expect(destinationsRepo.calcTripEstimate(8, 10, 2)).to.equal(3575)
   });
 
   it('should return a cost of 0 if the destination is not found', () => {
-    expect(destinationsRepo.calculateTripCost(20, 10, 2)).to.equal(0)
+    expect(destinationsRepo.calcTripEstimate(20, 10, 2)).to.equal(0)
   });
 })

@@ -25,7 +25,7 @@ class Trips {
     });
   };
 
-  calculateTotalCost(userID, destinationsArray) {
+  calcTotalCost(userID, destinationsArray) {
     let filteredTrips;
 
     if (!userID) {
@@ -42,7 +42,7 @@ class Trips {
       if (locationInfo) {
         acc += Math.round((current.duration * locationInfo.estimatedLodgingCostPerDay
           + current.travelers * locationInfo.estimatedFlightCostPerPerson) * 1.1);
-      }
+      };
 
       return acc;
     }, 0);

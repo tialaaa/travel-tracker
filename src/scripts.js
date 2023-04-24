@@ -1,6 +1,5 @@
 import './css/styles.css';
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
-import './images/turing-logo.png'
 import './images/hot-air-balloon-black-2.png'
 import { getData, postData } from './fetch-calls.js'
 import Travelers from './Travelers.js'
@@ -143,7 +142,7 @@ function populateFormList() {
 
 requestForm.addEventListener('change', (e) => {
   let inputs = validateRequest();
-  let currentEstimate = destinations.calculateTripCost(inputs.destinationID, inputs.duration, inputs.travelers);
+  let currentEstimate = destinations.calcTripEstimate(inputs.destinationID, inputs.duration, inputs.travelers);
 
   estimateCost.classList.add('shown');
   estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
@@ -213,7 +212,7 @@ function displayUserInfo() {
   greeting.innerText = `Welcome, ${travelers.printFirstName()}!`;
   profileName.innerText = `Full name: ${travelers.currentUser.name}`;
   profileType.innerText = `Traveler type: ${travelers.currentUser.travelerType}`;
-  profileCost.innerText = `You've spent ${USDollar.format(trips.calculateTotalCost(userID, destinations))} on trips`;
+  profileCost.innerText = `You've spent ${USDollar.format(trips.calcTotalCost(userID, destinations))} on trips`;
 };
 
 function displayPastTrips() {

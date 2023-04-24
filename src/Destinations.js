@@ -7,7 +7,7 @@ class Destinations {
     return this.allData.find(place => place.id === destinationID);
   };
 
-  calculateTripCost(destinationID, numDays, numTravelers) {
+  calcTripEstimate(destinationID, numDays, numTravelers) {
     let currentDestination = this.allData.find(place => place.id === destinationID);
     
     if (!currentDestination) {
