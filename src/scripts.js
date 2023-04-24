@@ -6,13 +6,12 @@ import { getData, postData } from './fetch-calls.js'
 import Travelers from './Travelers.js'
 import Trips from './Trips.js'
 import Destinations from './Destinations.js'
-import Glide from '@glidejs/glide'
-// import "@glidejs/glide/src/assets/sass/glide.core"
-// import "@glidejs/glide/src/assets/sass/glide.theme"
-// new Glide('.glide').mount()
+// import Glide from '@glidejs/glide'
 const dayjs = require('dayjs')
-// dayjs().format()
 
+const loginPage = document.getElementById('containerLogin');
+const mainPage = document.getElementById('containerMain');
+const loginForm = document.getElementById('loginForm');
 const greeting = document.getElementById('userGreeting');
 const profileName = document.getElementById('userFullName');
 const profileType = document.getElementById('travelerType');
@@ -20,9 +19,8 @@ const profileCost = document.getElementById('annualCost');
 const pastTripsCont = document.getElementById('pastTripsCont');
 const futureTripsCont = document.getElementById('futureTripsCont');
 const messageNoUpcoming = document.getElementById('messageNoUpcoming');
-const buttonBookTrip = document.getElementById('bookTrip');
+const buttonLogout = document.getElementById('buttonLogout');
 const requestForm = document.getElementById('requestForm');
-const submitRequest = document.getElementById('submitRequest');
 const formList = document.getElementById('destinationList');
 const formStartDate = document.getElementById('startDate');
 const formEndDate = document.getElementById('endDate');
@@ -34,8 +32,7 @@ let todayInputFormat = today.format('YYYY-MM-DD')
 let tomorrowInputFormat = today.add(1,'day').format('YYYY-MM-DD')
 
 let travelers, trips, destinations, successfulRequest;
-let userID = 5;
-// console.log(getData('travelers/1'))
+let userID;
 
 const USDollar = Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -44,28 +41,84 @@ const USDollar = Intl.NumberFormat('en-US', {
 });
 
 window.addEventListener('load', () => {
-  loadInitialData();
-  populateFormDates();
+  loginPage.classList.remove('hidden');
+  mainPage.classList.add('hidden');
+  buttonLogout.classList.add('hidden');
 });
+
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  validateLogin();
+});
+
+buttonLogout.addEventListener('click', (e) => {
+  e.preventDefault();
+  userID = undefined;
+  loginPage.classList.remove('hidden');
+  mainPage.classList.add('hidden');
+  buttonLogout.classList.add('hidden');
+  loginForm.reset();
+})
+
+function validateLogin() {
+  const loginData = new FormData(loginForm);
+  const submittedPass = loginData.get('password');
+  const submittedID = loginData.get('username').split('');
+  const submittedString = submittedID.slice(0, 8).join('');
+  const submittedNum = parseInt(submittedID.slice(8).join(''));
+
+  Promise.all([getData(`travelers/${submittedNum}`)])
+    .then(data => {
+      if (!validateUserID(data, submittedNum, submittedString) || !validatePassword(submittedPass)) {
+        return false;
+      } else {
+        userID = submittedNum;
+        loginPage.classList.add('hidden');
+        mainPage.classList.remove('hidden');
+        buttonLogout.classList.remove('hidden');
+        loadInitialData();
+        populateFormDates();
+      };
+    })
+    .catch(err => console.log(err))
+};
+
+function validatePassword(passToCheck) {
+  if (passToCheck !== 'travel') {
+    alert('Incorrect password');
+    loginForm.reset();
+    return false;
+  };
+  return true;
+};
+
+function validateUserID(responseArray, number, string) {
+  if (responseArray[0].message === `No traveler found with an id of ${number}` || string !== 'traveler') {
+    alert('Incorrect username');
+    loginForm.reset();
+    return false;
+  };
+  return true;
+};
 
 function loadInitialData() {
   Promise.all([getData('travelers'), getData('trips'), getData('destinations')])
-  .then(data => {
-    travelers = new Travelers(data[0].travelers);
-    trips = new Trips(data[1].trips);
-    destinations = new Destinations(data[2].destinations);
-  })
-  .then(() => {
-    travelers.findById(userID)
-    console.log(travelers)
-    resetForm()
-    displayUserInfo()
-    displayPastTrips()
-    displayUpcomingTrips()
-    console.log(trips)
-  })
-  .catch(err => console.log(err))
-};
+    .then(data => {
+      travelers = new Travelers(data[0].travelers);
+      trips = new Trips(data[1].trips);
+      destinations = new Destinations(data[2].destinations);
+    })
+    .then(() => {
+      travelers.findById(userID)
+      console.log(travelers)
+      resetForm()
+      displayUserInfo()
+      displayPastTrips()
+      displayUpcomingTrips()
+      console.log(trips)
+    })
+    .catch(err => console.log(err))
+  };
 
 function resetForm() {
   requestForm.reset();
@@ -204,7 +257,9 @@ function renderTripCards(tripsContainer, tripsArray) {
     tripsContainer.innerHTML += `
       <div class="trip-card">
         <span class="status-flag ${hiddenStatus}">Status: ${trip.status}</span>
-        <img src="${currentDest.image}" alt="${currentDest.alt}">
+        <div class="image-cont">
+          <img src="${currentDest.image}" alt="${currentDest.alt}">
+        </div>
         <div class="trip-info">
           <h4 class="dest-name">${currentDest.destination}</h4>
           <p>Date: ${dayjs(trip.date).format('MMM DD, YYYY')}</p>
