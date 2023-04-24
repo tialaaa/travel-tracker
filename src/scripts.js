@@ -26,7 +26,7 @@ const estimateCost = document.getElementById('estimateCost');
 
 // variable 'today' for testing use only; remove before final push
 let today = dayjs("2021-05-25");
-
+let defaultStartDate = today;
 let travelers, trips, destinations, successfulRequest;
 let userID;
 
@@ -36,7 +36,9 @@ const USDollar = Intl.NumberFormat('en-US', {
   minimumFractionDigits: 0
 });
 
-window.addEventListener('load', showLoginPage());
+window.addEventListener('load', showLoginPage()
+// some display to tell user if server isn't connected?
+);
 
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -51,33 +53,31 @@ buttonLogout.addEventListener('click', (e) => {
 })
 
 requestForm.addEventListener('change', (e) => {
-  let inputs = validateRequest();
-  let currentEstimate = destinations.calcTripEstimate(inputs.destinationID, inputs.duration, inputs.travelers);
-
-  addClass(estimateCost, 'shown');
-  estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
+  if (e.target === formStartDate) {
+    defaultStartDate = formStartDate.value;
+    autoupdateEndDate();
+  };
+  
+  let currentInputs = validateRequest();
+  showTripEstimate(currentInputs);
 });
 
 requestForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
   if (validateRequest()) {
-    console.log('Validate successful')
     resetForm();
-    estimateCost.innerHTML = ``;
     removeClass(estimateCost, 'shown');
+    estimateCost.innerHTML = ``;
 
     Promise.all([postData('trips', successfulRequest)])
       .then(() => {
         getData('trips')
         .then(responseJson => {
-          console.log(responseJson)
           trips = new Trips(responseJson.trips)
           alert('Your trip request has been submitted for agent approval.')
           displayUpcomingTrips()
         })
-        // .then(() => {
-        // })
         .catch(err => console.log(err))
       });
   };
@@ -86,16 +86,16 @@ requestForm.addEventListener('submit', (e) => {
 function validateLogin() {
   const loginData = new FormData(loginForm);
   const submittedPass = loginData.get('password');
-  const submittedID = loginData.get('username').split('');
-  const submittedString = submittedID.slice(0, 8).join('');
-  const submittedNum = parseInt(submittedID.slice(8).join(''));
+  const submittedUsername = loginData.get('username').split('');
+  const submittedUserString = submittedUsername.slice(0, 8).join('');
+  const submittedUserNum = parseInt(submittedUsername.slice(8).join(''));
 
-  Promise.all([getData(`travelers/${submittedNum}`)])
+  Promise.all([getData(`travelers/${submittedUserNum}`)])
     .then(data => {
-      if (!validateUserID(data, submittedNum, submittedString) || !validatePassword(submittedPass)) {
+      if (!validateUserID(data, submittedUserNum, submittedUserString) || !validatePassword(submittedPass)) {
         return false;
       } else {
-        userID = submittedNum;
+        userID = submittedUserNum;
         showUserDashboard();
         loadInitialData();
         populateFormDates();
@@ -130,28 +130,31 @@ function loadInitialData() {
       destinations = new Destinations(data[2].destinations);
     })
     .then(() => {
-      travelers.findById(userID)
-      console.log(travelers)
-      resetForm()
-      displayUserInfo()
-      displayPastTrips()
-      displayUpcomingTrips()
-      console.log(trips)
+      travelers.findById(userID);
+      resetForm();
+      displayUserInfo();
+      displayPastTrips();
+      displayUpcomingTrips();
     })
     .catch(err => console.log(err))
 };
 
 function resetForm() {
+  defaultStartDate = today;
   requestForm.reset();
   populateFormDates();
   populateFormList();
 };
 
 function populateFormDates() {
-  formStartDate.value = today.format('YYYY-MM-DD');
-  formEndDate.value = today.add(1,'day').format('YYYY-MM-DD');
+  formStartDate.value = dayjs(defaultStartDate).format('YYYY-MM-DD');
+  formEndDate.value = dayjs(defaultStartDate).add(1,'day').format('YYYY-MM-DD');
   formStartDate.setAttribute("min", today.format('YYYY-MM-DD'));
-  formEndDate.setAttribute("min", today.add(1,'day').format('YYYY-MM-DD'));
+  formEndDate.setAttribute("min", dayjs(defaultStartDate).add(1,'day').format('YYYY-MM-DD'));
+};
+
+function autoupdateEndDate() {
+  formEndDate.value = dayjs(defaultStartDate).add(1,'day').format('YYYY-MM-DD');
 };
 
 function populateFormList() {
@@ -195,6 +198,12 @@ function validateRequest() {
     status: 'pending',
     suggestedActivities: []
   };
+};
+
+function showTripEstimate(inputs) {
+  let currentEstimate = destinations.calcTripEstimate(inputs.destinationID, inputs.duration, inputs.travelers);
+  estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
+  addClass(estimateCost, 'shown');
 };
 
 function displayUserInfo() {
