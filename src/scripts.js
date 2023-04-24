@@ -1,12 +1,12 @@
 import './css/styles.css';
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
-import './images/hot-air-balloon-black-2.png'
-import { getData, postData } from './fetch-calls.js'
-import Travelers from './Travelers.js'
-import Trips from './Trips.js'
-import Destinations from './Destinations.js'
+import './images/hot-air-balloon-black-2.png';
+import { getData, postData } from './fetch-calls.js';
+import Travelers from './Travelers.js';
+import Trips from './Trips.js';
+import Destinations from './Destinations.js';
 // import Glide from '@glidejs/glide'
-const dayjs = require('dayjs')
+const dayjs = require('dayjs');
 
 const loginPage = document.getElementById('containerLogin');
 const mainPage = document.getElementById('containerMain');
@@ -26,9 +26,9 @@ const formEndDate = document.getElementById('endDate');
 const estimateCost = document.getElementById('estimateCost');
 
 // variable 'today' for testing use only; remove before final push
-let today = dayjs("2020-05-25");
-let todayInputFormat = today.format('YYYY-MM-DD')
-let tomorrowInputFormat = today.add(1,'day').format('YYYY-MM-DD')
+let today = dayjs("2021-05-25");
+let todayFormFormat = today.format('YYYY-MM-DD');
+let tomorrowFormFormat = today.add(1,'day').format('YYYY-MM-DD');
 
 let travelers, trips, destinations, successfulRequest;
 let userID;
@@ -40,9 +40,7 @@ const USDollar = Intl.NumberFormat('en-US', {
 });
 
 window.addEventListener('load', () => {
-  loginPage.classList.remove('hidden');
-  mainPage.classList.add('hidden');
-  buttonLogout.classList.add('hidden');
+  showLoginPage();
 });
 
 loginForm.addEventListener('submit', (e) => {
@@ -53,11 +51,29 @@ loginForm.addEventListener('submit', (e) => {
 buttonLogout.addEventListener('click', (e) => {
   e.preventDefault();
   userID = undefined;
-  loginPage.classList.remove('hidden');
-  mainPage.classList.add('hidden');
-  buttonLogout.classList.add('hidden');
+  showLoginPage();
   loginForm.reset();
 })
+
+function removeClass(element, className) {
+  element.classList.remove(className)
+};
+
+function addClass(element, className) {
+  element.classList.add(className)
+};
+
+function showLoginPage() {
+  removeClass(loginPage, 'hidden');
+  addClass(mainPage, 'hidden');
+  addClass(buttonLogout, 'hidden');
+};
+
+function showUserDashboard() {
+  addClass(loginPage, 'hidden');
+  removeClass(mainPage, 'hidden');
+  removeClass(buttonLogout, 'hidden');
+};
 
 function validateLogin() {
   const loginData = new FormData(loginForm);
@@ -72,9 +88,7 @@ function validateLogin() {
         return false;
       } else {
         userID = submittedNum;
-        loginPage.classList.add('hidden');
-        mainPage.classList.remove('hidden');
-        buttonLogout.classList.remove('hidden');
+        showUserDashboard();
         loadInitialData();
         populateFormDates();
       };
@@ -126,10 +140,10 @@ function resetForm() {
 };
 
 function populateFormDates() {
-  formStartDate.value = todayInputFormat;
-  formEndDate.value = tomorrowInputFormat;
-  formStartDate.setAttribute("min", todayInputFormat);
-  formEndDate.setAttribute("min", tomorrowInputFormat);
+  formStartDate.value = todayFormFormat;
+  formEndDate.value = tomorrowFormFormat;
+  formStartDate.setAttribute("min", todayFormFormat);
+  formEndDate.setAttribute("min", tomorrowFormFormat);
 };
 
 function populateFormList() {
@@ -144,7 +158,7 @@ requestForm.addEventListener('change', (e) => {
   let inputs = validateRequest();
   let currentEstimate = destinations.calcTripEstimate(inputs.destinationID, inputs.duration, inputs.travelers);
 
-  estimateCost.classList.add('shown');
+  addClass(estimateCost, 'shown');
   estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
 });
 
@@ -155,7 +169,7 @@ requestForm.addEventListener('submit', (e) => {
     console.log('Validate successful')
     resetForm();
     estimateCost.innerHTML = ``;
-    estimateCost.classList.remove('shown');
+    removeClass(estimateCost, 'shown');
 
     Promise.all([postData('trips', successfulRequest)])
       .then(() => {
@@ -233,10 +247,10 @@ function displayUpcomingTrips() {
   });
 
   if (futureTrips.length === 0) {
-    messageNoUpcoming.classList.remove('hidden');
+    removeClass(messageNoUpcoming, 'hidden')
     return;
   } else {
-    messageNoUpcoming.classList.add('hidden');
+    addClass(messageNoUpcoming, 'hidden')
   };
 
   renderTripCards(futureTripsCont, futureTrips);
