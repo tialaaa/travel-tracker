@@ -5,7 +5,6 @@ import { getData, postData } from './fetch-calls.js';
 import Travelers from './Travelers.js';
 import Trips from './Trips.js';
 import Destinations from './Destinations.js';
-// import Glide from '@glidejs/glide'
 const dayjs = require('dayjs');
 
 const loginPage = document.getElementById('containerLogin');
@@ -27,8 +26,6 @@ const estimateCost = document.getElementById('estimateCost');
 
 // variable 'today' for testing use only; remove before final push
 let today = dayjs("2021-05-25");
-let todayFormFormat = today.format('YYYY-MM-DD');
-let tomorrowFormFormat = today.add(1,'day').format('YYYY-MM-DD');
 
 let travelers, trips, destinations, successfulRequest;
 let userID;
@@ -39,9 +36,7 @@ const USDollar = Intl.NumberFormat('en-US', {
   minimumFractionDigits: 0
 });
 
-window.addEventListener('load', () => {
-  showLoginPage();
-});
+window.addEventListener('load', showLoginPage());
 
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -55,25 +50,38 @@ buttonLogout.addEventListener('click', (e) => {
   loginForm.reset();
 })
 
-function removeClass(element, className) {
-  element.classList.remove(className)
-};
+requestForm.addEventListener('change', (e) => {
+  let inputs = validateRequest();
+  let currentEstimate = destinations.calcTripEstimate(inputs.destinationID, inputs.duration, inputs.travelers);
 
-function addClass(element, className) {
-  element.classList.add(className)
-};
+  addClass(estimateCost, 'shown');
+  estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
+});
 
-function showLoginPage() {
-  removeClass(loginPage, 'hidden');
-  addClass(mainPage, 'hidden');
-  addClass(buttonLogout, 'hidden');
-};
+requestForm.addEventListener('submit', (e) => {
+  e.preventDefault();
 
-function showUserDashboard() {
-  addClass(loginPage, 'hidden');
-  removeClass(mainPage, 'hidden');
-  removeClass(buttonLogout, 'hidden');
-};
+  if (validateRequest()) {
+    console.log('Validate successful')
+    resetForm();
+    estimateCost.innerHTML = ``;
+    removeClass(estimateCost, 'shown');
+
+    Promise.all([postData('trips', successfulRequest)])
+      .then(() => {
+        getData('trips')
+        .then(responseJson => {
+          console.log(responseJson)
+          trips = new Trips(responseJson.trips)
+          alert('Your trip request has been submitted for agent approval.')
+          displayUpcomingTrips()
+        })
+        // .then(() => {
+        // })
+        .catch(err => console.log(err))
+      });
+  };
+});
 
 function validateLogin() {
   const loginData = new FormData(loginForm);
@@ -131,7 +139,7 @@ function loadInitialData() {
       console.log(trips)
     })
     .catch(err => console.log(err))
-  };
+};
 
 function resetForm() {
   requestForm.reset();
@@ -140,10 +148,10 @@ function resetForm() {
 };
 
 function populateFormDates() {
-  formStartDate.value = todayFormFormat;
-  formEndDate.value = tomorrowFormFormat;
-  formStartDate.setAttribute("min", todayFormFormat);
-  formEndDate.setAttribute("min", tomorrowFormFormat);
+  formStartDate.value = today.format('YYYY-MM-DD');
+  formEndDate.value = today.add(1,'day').format('YYYY-MM-DD');
+  formStartDate.setAttribute("min", today.format('YYYY-MM-DD'));
+  formEndDate.setAttribute("min", today.add(1,'day').format('YYYY-MM-DD'));
 };
 
 function populateFormList() {
@@ -153,39 +161,6 @@ function populateFormList() {
     `
   });
 };
-
-requestForm.addEventListener('change', (e) => {
-  let inputs = validateRequest();
-  let currentEstimate = destinations.calcTripEstimate(inputs.destinationID, inputs.duration, inputs.travelers);
-
-  addClass(estimateCost, 'shown');
-  estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
-});
-
-requestForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  if (validateRequest()) {
-    console.log('Validate successful')
-    resetForm();
-    estimateCost.innerHTML = ``;
-    removeClass(estimateCost, 'shown');
-
-    Promise.all([postData('trips', successfulRequest)])
-      .then(() => {
-        getData('trips')
-        .then(responseJson => {
-          console.log(responseJson)
-          trips = new Trips(responseJson.trips)
-          alert('Your trip request has been submitted for agent approval.')
-          displayUpcomingTrips()
-        })
-        // .then(() => {
-        // })
-        .catch(err => console.log(err))
-      });
-  };
-});
 
 function validateRequest() {
   const requestData = new FormData(requestForm);
@@ -282,4 +257,24 @@ function renderTripCards(tripsContainer, tripsArray) {
       </div>
     `
   });
+};
+
+function removeClass(element, className) {
+  element.classList.remove(className)
+};
+
+function addClass(element, className) {
+  element.classList.add(className)
+};
+
+function showLoginPage() {
+  removeClass(loginPage, 'hidden');
+  addClass(mainPage, 'hidden');
+  addClass(buttonLogout, 'hidden');
+};
+
+function showUserDashboard() {
+  addClass(loginPage, 'hidden');
+  removeClass(mainPage, 'hidden');
+  removeClass(buttonLogout, 'hidden');
 };
