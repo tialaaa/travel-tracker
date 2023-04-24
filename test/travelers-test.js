@@ -1,66 +1,13 @@
 import chai from 'chai';
 const expect = chai.expect;
 import Travelers from '../src/Travelers.js';
+import { travelersArray } from './test-data.js';
 
 describe('Travelers class tests', () => {
-  let dataArray;
   let travelerRepo;
 
   beforeEach(() => {
-    dataArray = [
-      {
-        "id": 1,
-        "name": "Ham Leadbeater",
-        "travelerType": "relaxer"
-        },
-        {
-        "id": 2,
-        "name": "Rachael Vaughten",
-        "travelerType": "thrill-seeker"
-        },
-        {
-        "id": 3,
-        "name": "Sibby Dawidowitsch",
-        "travelerType": "shopper"
-        },
-        {
-        "id": 4,
-        "name": "Leila Thebeaud",
-        "travelerType": "photographer"
-        },
-        {
-        "id": 5,
-        "name": "Tiffy Grout",
-        "travelerType": "thrill-seeker"
-        },
-        {
-        "id": 6,
-        "name": "Laverna Flawith",
-        "travelerType": "shopper"
-        },
-        {
-        "id": 7,
-        "name": "Emmet Sandham",
-        "travelerType": "relaxer"
-        },
-        {
-        "id": 8,
-        "name": "Carlin O'Reilly",
-        "travelerType": "history buff"
-        },
-        {
-        "id": 9,
-        "name": "Natalee Deegin",
-        "travelerType": "relaxer"
-        },
-        {
-        "id": 10,
-        "name": "Rickie Jodlowski",
-        "travelerType": "relaxer"
-        }
-    ];
-
-    travelerRepo = new Travelers(dataArray);
+    travelerRepo = new Travelers(travelersArray);
   });
   
   it('should be an instance of Travelers class', () => {
@@ -68,7 +15,7 @@ describe('Travelers class tests', () => {
   });
 
   it('should store an array of all traveler objects', () => {
-    expect(travelerRepo.allData).to.deep.equal(dataArray)
+    expect(travelerRepo.allData).to.deep.equal(travelersArray)
   });
 
   it('should be able to find one user\'s data based on a userID number', () => {
