@@ -25,7 +25,7 @@ h2,
 }
 
 h3,
-.heading-span > p,
+.heading-group > p,
 .dest-name {
   font-size: 1.25rem;
 }
@@ -47,7 +47,8 @@ article,
 .user-profile,
 .trip-card,
 .button-submit,
-.button-submit:after {
+.button-submit:after,
+.button-logout {
   border-radius: 5px;
 }
 
@@ -57,7 +58,7 @@ h2 {
   padding-top: 0.5rem;
 }
 
-.heading-span > h1,
+.heading-group > h1,
 .trips-sections > p {
   padding-left: 3rem;
 }
@@ -94,23 +95,24 @@ article > h3,
 
 header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 6rem;
   box-shadow: rgba(33, 35, 38, 0.1) 0px 1px 2px 0px;
 }
 
-.heading-span {
+.heading-group {
   display: flex;
   align-items: center;
 }
 
-.heading-span > h1,
-.heading-span > p {
+.heading-group > h1,
+.heading-group > p {
   display: inline;
 }
 
-.heading-span > p {
+.heading-group > p {
   font-weight: 500;
   padding-left: 1.25rem;
 }
@@ -122,6 +124,25 @@ h1 {
 .icon {
   width: 3rem;
   height: 3rem;
+}
+
+.button-logout,
+.button-submit {
+  border: 0 solid #E5E7EB;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  color: rgb(100, 2, 68);
+  background-color: rgba(240, 46, 170, 0.3);
+  box-sizing: border-box;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.button-logout {
+  width: 150px;
+  margin: 0 3rem;
+  padding: .75rem 1.25rem;
 }
 
 /* REQUEST FORM */
@@ -238,21 +259,12 @@ img {
   max-width: 150px;
   height: 50px;
   margin: 2.5rem;
-  border: 0 solid #E5E7EB;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   padding: .75rem 1.65rem;
-  color: rgb(100, 2, 68);
-  background-color: rgba(240, 46, 170, 0.3);
-  box-sizing: border-box;
   font-size: 1.2rem;
-  font-weight: 700;
   line-height: 1.35rem;
-  text-align: center;
   text-decoration: none #000000 solid;
   text-decoration-thickness: auto;
-  text-transform: uppercase;
   position: relative;
-  cursor: pointer;
   transform: rotate(-2deg);
   user-select: none;
   -webkit-user-select: none;
@@ -347,8 +359,13 @@ form#loginForm button {
     font-size: 1.75rem;
   }
 
-  .heading-span > p {
+  .heading-group > p {
     font-size: 1rem;
+  }
+
+  .button-logout {
+    font-size: 0.75rem;
+    width: 120px;
   }
 }
 
@@ -376,8 +393,13 @@ form#loginForm button {
     font-size: 1.5rem;
   }
 
-  .heading-span > p {
+  .heading-group > p {
     font-size: 0.75rem;
+  }
+
+  .button-logout {
+    font-size: 0.75rem;
+    padding: 0.75rem;
   }
 }
 
@@ -386,7 +408,7 @@ form#loginForm button {
     font-size: 1.25rem;
   }
 
-  .heading-span > p {
+  .heading-group > p {
     font-size: 0.65rem;
   }
 }

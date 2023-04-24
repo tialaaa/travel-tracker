@@ -19,7 +19,7 @@ const profileCost = document.getElementById('annualCost');
 const pastTripsCont = document.getElementById('pastTripsCont');
 const futureTripsCont = document.getElementById('futureTripsCont');
 const messageNoUpcoming = document.getElementById('messageNoUpcoming');
-const buttonBookTrip = document.getElementById('bookTrip');
+const buttonLogout = document.getElementById('buttonLogout');
 const requestForm = document.getElementById('requestForm');
 const formList = document.getElementById('destinationList');
 const formStartDate = document.getElementById('startDate');
@@ -43,12 +43,22 @@ const USDollar = Intl.NumberFormat('en-US', {
 window.addEventListener('load', () => {
   loginPage.classList.remove('hidden');
   mainPage.classList.add('hidden');
+  buttonLogout.classList.add('hidden');
 });
 
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   validateLogin();
 });
+
+buttonLogout.addEventListener('click', (e) => {
+  e.preventDefault();
+  userID = undefined;
+  loginPage.classList.remove('hidden');
+  mainPage.classList.add('hidden');
+  buttonLogout.classList.add('hidden');
+  loginForm.reset();
+})
 
 function validateLogin() {
   const loginData = new FormData(loginForm);
@@ -65,6 +75,7 @@ function validateLogin() {
         userID = submittedNum;
         loginPage.classList.add('hidden');
         mainPage.classList.remove('hidden');
+        buttonLogout.classList.remove('hidden');
         loadInitialData();
         populateFormDates();
       };
