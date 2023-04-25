@@ -1,5 +1,4 @@
 import './css/styles.css';
-// An example of how you tell webpack to use an image (also need to link to it in the index.html)
 import './images/hot-air-balloon-black-2.png';
 import { getData, postData } from './fetch-calls.js';
 import Travelers from './Travelers.js';
@@ -26,7 +25,7 @@ const formEndDate = document.getElementById('endDate');
 const estimateCost = document.getElementById('estimateCost');
 
 // variable 'today' for testing use only; remove before final push
-let today = dayjs("2023-05-25");
+let today = dayjs("2021-05-25");
 let defaultStartDate = today;
 let travelers, trips, destinations, successfulRequest;
 let userID;
@@ -216,7 +215,7 @@ function displayUserInfo() {
 };
 
 function displayPastTrips() {
-  let pastTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
+  let pastTrips = trips.findSortedUserTrips(userID).filter(trip => {
     let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
     return parsedDate < dayjs(today);
   });
@@ -232,7 +231,7 @@ function displayPastTrips() {
 };
 
 function displayUpcomingTrips() {
-  let futureTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
+  let futureTrips = trips.findSortedUserTrips(userID).filter(trip => {
     let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
     return parsedDate >= dayjs(today);
   });
