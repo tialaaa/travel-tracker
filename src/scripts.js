@@ -28,7 +28,9 @@ const estimateCost = document.getElementById('estimateCost');
 let today = dayjs("2021-05-25");
 let defaultStartDate = today;
 let travelers, trips, destinations, successfulRequest;
-let userID;
+
+// VARIABLE 'USERID' TO BE USED FOR DEMO
+let userID = 10;
 
 const USDollar = Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -36,20 +38,27 @@ const USDollar = Intl.NumberFormat('en-US', {
   minimumFractionDigits: 0
 });
 
-window.addEventListener('load', showLoginPage()
-);
-
-loginForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  validateLogin();
+// LINES 42-61 REVISED FOR DEMO
+window.addEventListener('load', () => {
+  loadInitialData();
+  showUserDashboard();
+  populateFormDates();
 });
 
-buttonLogout.addEventListener('click', (e) => {
-  e.preventDefault();
-  userID = undefined;
-  showLoginPage();
-  loginForm.reset();
-})
+// window.addEventListener('load', showLoginPage()
+// );
+
+// loginForm.addEventListener('submit', (e) => {
+//   e.preventDefault();
+//   validateLogin();
+// });
+
+// buttonLogout.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   userID = undefined;
+//   showLoginPage();
+//   loginForm.reset();
+// })
 
 requestForm.addEventListener('change', (e) => {
   if (e.target === formStartDate) {
