@@ -185,7 +185,6 @@ function validateRequest() {
   };
 
   if (chosenCount <= 0 || isNaN(chosenCount)) {
-    alert('Trips must have at least one traveler. Please check your selection.');
     return false;
   };
 
