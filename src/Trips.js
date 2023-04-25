@@ -5,9 +5,8 @@ class Trips {
     this.allData = arrayOfTrips
   };
 
-  findSortedTripsBy(searchKey, searchValue) {
-    // If this isn't used to filter by status for agent, change to userID prop only
-    let filteredList = this.allData.filter(trip => trip[searchKey] === searchValue);
+  findSortedUserTrips(userID) {
+    let filteredList = this.allData.filter(trip => trip.userID === userID);
 
     return filteredList.sort((a,b) => {
       const dateA = dayjs(a.date).format('YYYY/MM/DD');
@@ -25,7 +24,7 @@ class Trips {
     });
   };
 
-  calculateTotalCost(userID, destinationsArray) {
+  calcTotalCost(userID, destinationsArray) {
     let filteredTrips;
 
     if (!userID) {
@@ -33,7 +32,7 @@ class Trips {
     } else if (typeof userID !== 'number') {
       return undefined;
     } else {
-      filteredTrips = this.findSortedTripsBy('userID', userID);
+      filteredTrips = this.findSortedUserTrips(userID);
     };
 
     return filteredTrips.reduce((acc, current) => {
@@ -42,7 +41,7 @@ class Trips {
       if (locationInfo) {
         acc += Math.round((current.duration * locationInfo.estimatedLodgingCostPerDay
           + current.travelers * locationInfo.estimatedFlightCostPerPerson) * 1.1);
-      }
+      };
 
       return acc;
     }, 0);

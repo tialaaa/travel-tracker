@@ -1,7 +1,10 @@
 function getData(endpoint) {
   return fetch(`http://localhost:3001/api/v1/${endpoint}`)
   .then(response => response.json())
-  .catch(err => console.log(err))
+  .catch(err => {
+    alert('Cannot access the server. Please try again later.');
+    console.log(err);
+  })
 };
 
 function postData(endpoint, bodyData) {
@@ -22,10 +25,6 @@ function postData(endpoint, bodyData) {
     response.json();
   })
   .catch(err => console.log(err))
-};
-
-function deleteData(tripID) {
-  // to complete for Iteration 5
 };
 
 export { getData, postData };

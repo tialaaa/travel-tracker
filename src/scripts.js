@@ -1,13 +1,10 @@
 import './css/styles.css';
-// An example of how you tell webpack to use an image (also need to link to it in the index.html)
-import './images/turing-logo.png'
-import './images/hot-air-balloon-black-2.png'
-import { getData, postData } from './fetch-calls.js'
-import Travelers from './Travelers.js'
-import Trips from './Trips.js'
-import Destinations from './Destinations.js'
-// import Glide from '@glidejs/glide'
-const dayjs = require('dayjs')
+import './images/hot-air-balloon-black-2.png';
+import { getData, postData } from './fetch-calls.js';
+import Travelers from './Travelers.js';
+import Trips from './Trips.js';
+import Destinations from './Destinations.js';
+const dayjs = require('dayjs');
 
 const loginPage = document.getElementById('containerLogin');
 const mainPage = document.getElementById('containerMain');
@@ -17,6 +14,7 @@ const profileName = document.getElementById('userFullName');
 const profileType = document.getElementById('travelerType');
 const profileCost = document.getElementById('annualCost');
 const pastTripsCont = document.getElementById('pastTripsCont');
+const pastSection = document.getElementById('pastSection');
 const futureTripsCont = document.getElementById('futureTripsCont');
 const messageNoUpcoming = document.getElementById('messageNoUpcoming');
 const buttonLogout = document.getElementById('buttonLogout');
@@ -26,11 +24,9 @@ const formStartDate = document.getElementById('startDate');
 const formEndDate = document.getElementById('endDate');
 const estimateCost = document.getElementById('estimateCost');
 
-// variable 'today' for testing use only; remove before final push
-let today = dayjs("2020-05-25");
-let todayInputFormat = today.format('YYYY-MM-DD')
-let tomorrowInputFormat = today.add(1,'day').format('YYYY-MM-DD')
-
+// VARIABLE 'TODAY' TO BE USED FOR DEMO
+let today = dayjs("2021-05-25");
+let defaultStartDate = today;
 let travelers, trips, destinations, successfulRequest;
 let userID;
 
@@ -40,11 +36,8 @@ const USDollar = Intl.NumberFormat('en-US', {
   minimumFractionDigits: 0
 });
 
-window.addEventListener('load', () => {
-  loginPage.classList.remove('hidden');
-  mainPage.classList.add('hidden');
-  buttonLogout.classList.add('hidden');
-});
+window.addEventListener('load', showLoginPage()
+);
 
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -54,33 +47,62 @@ loginForm.addEventListener('submit', (e) => {
 buttonLogout.addEventListener('click', (e) => {
   e.preventDefault();
   userID = undefined;
-  loginPage.classList.remove('hidden');
-  mainPage.classList.add('hidden');
-  buttonLogout.classList.add('hidden');
+  showLoginPage();
   loginForm.reset();
 })
+
+requestForm.addEventListener('change', (e) => {
+  if (e.target === formStartDate) {
+    defaultStartDate = formStartDate.value;
+    autoupdateEndDate();
+  };
+  
+  let currentInputs = validateRequest();
+  showTripEstimate(currentInputs);
+});
+
+requestForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  if (validateRequest()) {
+    resetForm();
+    removeClass(estimateCost, 'shown');
+    estimateCost.innerHTML = ``;
+
+    Promise.resolve(postData('trips', successfulRequest))
+    .then(() => {
+      getData('trips')
+      .then(responseJson => {
+        trips = new Trips(responseJson.trips)
+        alert('Your trip request has been submitted for agent approval.')
+        displayUpcomingTrips()
+      })
+      .catch(err => console.log(err))
+    });
+  };
+});
 
 function validateLogin() {
   const loginData = new FormData(loginForm);
   const submittedPass = loginData.get('password');
-  const submittedID = loginData.get('username').split('');
-  const submittedString = submittedID.slice(0, 8).join('');
-  const submittedNum = parseInt(submittedID.slice(8).join(''));
+  const submittedUsername = loginData.get('username').split('');
+  const submittedUserString = submittedUsername.slice(0, 8).join('');
+  const submittedUserNum = parseInt(submittedUsername.slice(8).join(''));
 
-  Promise.all([getData(`travelers/${submittedNum}`)])
+  Promise.resolve(getData(`travelers/${submittedUserNum}`))
     .then(data => {
-      if (!validateUserID(data, submittedNum, submittedString) || !validatePassword(submittedPass)) {
+      if (!validateUserID(data, submittedUserNum, submittedUserString) || !validatePassword(submittedPass)) {
         return false;
       } else {
-        userID = submittedNum;
-        loginPage.classList.add('hidden');
-        mainPage.classList.remove('hidden');
-        buttonLogout.classList.remove('hidden');
+        userID = submittedUserNum;
+        showUserDashboard();
         loadInitialData();
         populateFormDates();
       };
     })
-    .catch(err => console.log(err))
+    .catch(err => console.log(err));
+
+  loginForm.reset();
 };
 
 function validatePassword(passToCheck) {
@@ -92,8 +114,8 @@ function validatePassword(passToCheck) {
   return true;
 };
 
-function validateUserID(responseArray, number, string) {
-  if (responseArray[0].message === `No traveler found with an id of ${number}` || string !== 'traveler') {
+function validateUserID(responseObject, number, string) {
+  if (responseObject.message === `No traveler found with an id of ${number}` || string !== 'traveler') {
     alert('Incorrect username');
     loginForm.reset();
     return false;
@@ -109,28 +131,31 @@ function loadInitialData() {
       destinations = new Destinations(data[2].destinations);
     })
     .then(() => {
-      travelers.findById(userID)
-      console.log(travelers)
-      resetForm()
-      displayUserInfo()
-      displayPastTrips()
-      displayUpcomingTrips()
-      console.log(trips)
+      travelers.findById(userID);
+      resetForm();
+      displayUserInfo();
+      displayPastTrips();
+      displayUpcomingTrips();
     })
     .catch(err => console.log(err))
-  };
+};
 
 function resetForm() {
+  defaultStartDate = today;
   requestForm.reset();
   populateFormDates();
   populateFormList();
 };
 
 function populateFormDates() {
-  formStartDate.value = todayInputFormat;
-  formEndDate.value = tomorrowInputFormat;
-  formStartDate.setAttribute("min", todayInputFormat);
-  formEndDate.setAttribute("min", tomorrowInputFormat);
+  formStartDate.value = dayjs(defaultStartDate).format('YYYY-MM-DD');
+  formEndDate.value = dayjs(defaultStartDate).add(1,'day').format('YYYY-MM-DD');
+  formStartDate.setAttribute("min", today.format('YYYY-MM-DD'));
+  formEndDate.setAttribute("min", dayjs(defaultStartDate).add(1,'day').format('YYYY-MM-DD'));
+};
+
+function autoupdateEndDate() {
+  formEndDate.value = dayjs(defaultStartDate).add(1,'day').format('YYYY-MM-DD');
 };
 
 function populateFormList() {
@@ -140,39 +165,6 @@ function populateFormList() {
     `
   });
 };
-
-requestForm.addEventListener('change', (e) => {
-  let inputs = validateRequest();
-  let currentEstimate = destinations.calculateTripCost(inputs.destinationID, inputs.duration, inputs.travelers);
-
-  estimateCost.classList.add('shown');
-  estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
-});
-
-requestForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  if (validateRequest()) {
-    console.log('Validate successful')
-    resetForm();
-    estimateCost.innerHTML = ``;
-    estimateCost.classList.remove('shown');
-
-    Promise.all([postData('trips', successfulRequest)])
-      .then(() => {
-        getData('trips')
-        .then(responseJson => {
-          console.log(responseJson)
-          trips = new Trips(responseJson.trips)
-          alert('Your trip request has been submitted for agent approval.')
-          displayUpcomingTrips()
-        })
-        // .then(() => {
-        // })
-        .catch(err => console.log(err))
-      });
-  };
-});
 
 function validateRequest() {
   const requestData = new FormData(requestForm);
@@ -209,35 +201,46 @@ function validateRequest() {
   };
 };
 
+function showTripEstimate(inputs) {
+  let currentEstimate = destinations.calcTripEstimate(inputs.destinationID, inputs.duration, inputs.travelers);
+  estimateCost.innerHTML = `Cost Estimate: ${USDollar.format(currentEstimate)}`;
+  addClass(estimateCost, 'shown');
+};
+
 function displayUserInfo() {
   greeting.innerText = `Welcome, ${travelers.printFirstName()}!`;
   profileName.innerText = `Full name: ${travelers.currentUser.name}`;
   profileType.innerText = `Traveler type: ${travelers.currentUser.travelerType}`;
-  profileCost.innerText = `You've spent ${USDollar.format(trips.calculateTotalCost(userID, destinations))} on trips`;
+  profileCost.innerText = `You've spent ${USDollar.format(trips.calcTotalCost(userID, destinations))} on trips`;
 };
 
 function displayPastTrips() {
-  let pastTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
+  let pastTrips = trips.findSortedUserTrips(userID).filter(trip => {
     let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
-    // return parsedDate < dayjs();
     return parsedDate < dayjs(today);
   });
+
+  if (pastTrips.length === 0) {
+    addClass(pastSection, 'hidden')
+    return;
+  } else {
+    removeClass(pastSection, 'hidden')
+  };
 
   renderTripCards(pastTripsCont, pastTrips);
 };
 
 function displayUpcomingTrips() {
-  let futureTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
+  let futureTrips = trips.findSortedUserTrips(userID).filter(trip => {
     let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
-    // return parsedDate > dayjs();
-    return parsedDate > dayjs(today);
+    return parsedDate >= dayjs(today);
   });
 
   if (futureTrips.length === 0) {
-    messageNoUpcoming.classList.remove('hidden');
+    removeClass(messageNoUpcoming, 'hidden')
     return;
   } else {
-    messageNoUpcoming.classList.add('hidden');
+    addClass(messageNoUpcoming, 'hidden')
   };
 
   renderTripCards(futureTripsCont, futureTrips);
@@ -269,4 +272,24 @@ function renderTripCards(tripsContainer, tripsArray) {
       </div>
     `
   });
+};
+
+function removeClass(element, className) {
+  element.classList.remove(className)
+};
+
+function addClass(element, className) {
+  element.classList.add(className)
+};
+
+function showLoginPage() {
+  removeClass(loginPage, 'hidden');
+  addClass(mainPage, 'hidden');
+  addClass(buttonLogout, 'hidden');
+};
+
+function showUserDashboard() {
+  addClass(loginPage, 'hidden');
+  removeClass(mainPage, 'hidden');
+  removeClass(buttonLogout, 'hidden');
 };
