@@ -15,6 +15,7 @@ const profileName = document.getElementById('userFullName');
 const profileType = document.getElementById('travelerType');
 const profileCost = document.getElementById('annualCost');
 const pastTripsCont = document.getElementById('pastTripsCont');
+const pastSection = document.getElementById('pastSection');
 const futureTripsCont = document.getElementById('futureTripsCont');
 const messageNoUpcoming = document.getElementById('messageNoUpcoming');
 const buttonLogout = document.getElementById('buttonLogout');
@@ -25,7 +26,7 @@ const formEndDate = document.getElementById('endDate');
 const estimateCost = document.getElementById('estimateCost');
 
 // variable 'today' for testing use only; remove before final push
-let today = dayjs("2021-05-25");
+let today = dayjs("2023-05-25");
 let defaultStartDate = today;
 let travelers, trips, destinations, successfulRequest;
 let userID;
@@ -216,9 +217,15 @@ function displayUserInfo() {
 function displayPastTrips() {
   let pastTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
     let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
-    // return parsedDate < dayjs();
     return parsedDate < dayjs(today);
   });
+
+  if (pastTrips.length === 0) {
+    addClass(pastSection, 'hidden')
+    return;
+  } else {
+    removeClass(pastSection, 'hidden')
+  };
 
   renderTripCards(pastTripsCont, pastTrips);
 };
@@ -226,7 +233,6 @@ function displayPastTrips() {
 function displayUpcomingTrips() {
   let futureTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
     let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
-    // return parsedDate > dayjs();
     return parsedDate > dayjs(today);
   });
 
