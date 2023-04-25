@@ -320,6 +320,11 @@ img {
   border-radius: 5px;
 }
 
+form#loginForm label {
+  display:inline-block;
+  width: 90px;
+}
+
 form#loginForm input {
   width: 250px;
 }
