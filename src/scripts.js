@@ -24,7 +24,7 @@ const formStartDate = document.getElementById('startDate');
 const formEndDate = document.getElementById('endDate');
 const estimateCost = document.getElementById('estimateCost');
 
-// variable 'today' for testing use only; remove before final push
+// VARIABLE 'TODAY' TO BE USED FOR DEMO
 let today = dayjs("2021-05-25");
 let defaultStartDate = today;
 let travelers, trips, destinations, successfulRequest;
