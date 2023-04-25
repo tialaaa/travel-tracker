@@ -38,7 +38,6 @@ const USDollar = Intl.NumberFormat('en-US', {
 });
 
 window.addEventListener('load', showLoginPage()
-// some display to tell user if server isn't connected?
 );
 
 loginForm.addEventListener('submit', (e) => {
@@ -102,7 +101,9 @@ function validateLogin() {
         populateFormDates();
       };
     })
-    .catch(err => console.log(err))
+    .catch(err => console.log(err));
+
+  loginForm.reset();
 };
 
 function validatePassword(passToCheck) {
