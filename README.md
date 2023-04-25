@@ -20,8 +20,8 @@ NOTE - This app makes network requests to local server data. You will need to cl
 10. Open the `http://localhost:8080/` link to your local server (also listed in your terminal) in your web browser to view the live page.
 11. `Control + C` is the command to stop running the local server. Run `Control + C` in **both** terminal tabs to fully disconnect.
 
-[//]: <> (Preview of App:)
-
+### Preview of App:
+![Travel-Tracker-preview-gif](https://user-images.githubusercontent.com/121128718/234365780-e64caefa-e980-47d1-a05e-66bda52e60be.gif)
 
 ### Context:
 [//]: <> (Give some context for the project here. How long did you have to work on it? How far into the Turing program are you?)
@@ -44,12 +44,12 @@ Solo project by Tiala Young: [GitHub](https://github.com/tialaaa), [LinkedIn](ht
 
 ### Learning Goals:
 [//]: <> (What were the learning goals of this project? What tech did you work with?)
-- Use OOP to drive the design of an application and its code
+- Use OOP to drive the design of a client-side application and its code
 - Work with an API to send and receive data
-- Solidify the code review process
-- Create a robust test suite that thoroughly tests all functionality of a client-side application
-- Create a user interface that is easy to use and follows best practices for accessibility
+- Implement a robust test suite using TDD that thoroughly tests all functionality
+- Create a user interface that is easy to use and follows best practices for a11y
+- Present a live demo of the application and its Lighthouse accessibility score
 
-
+[//]: <> (### Wins & Challenges:)
 [//]: <> (What are 2-3 wins you have from this project? What were some challenges you faced - and how did you get over them?)
 
