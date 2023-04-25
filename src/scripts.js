@@ -71,16 +71,16 @@ requestForm.addEventListener('submit', (e) => {
     removeClass(estimateCost, 'shown');
     estimateCost.innerHTML = ``;
 
-    Promise.all([postData('trips', successfulRequest)])
-      .then(() => {
-        getData('trips')
-        .then(responseJson => {
-          trips = new Trips(responseJson.trips)
-          alert('Your trip request has been submitted for agent approval.')
-          displayUpcomingTrips()
-        })
-        .catch(err => console.log(err))
-      });
+    Promise.resolve(postData('trips', successfulRequest))
+    .then(() => {
+      getData('trips')
+      .then(responseJson => {
+        trips = new Trips(responseJson.trips)
+        alert('Your trip request has been submitted for agent approval.')
+        displayUpcomingTrips()
+      })
+      .catch(err => console.log(err))
+    });
   };
 });
 
@@ -91,7 +91,7 @@ function validateLogin() {
   const submittedUserString = submittedUsername.slice(0, 8).join('');
   const submittedUserNum = parseInt(submittedUsername.slice(8).join(''));
 
-  Promise.all([getData(`travelers/${submittedUserNum}`)])
+  Promise.resolve(getData(`travelers/${submittedUserNum}`))
     .then(data => {
       if (!validateUserID(data, submittedUserNum, submittedUserString) || !validatePassword(submittedPass)) {
         return false;
@@ -114,8 +114,8 @@ function validatePassword(passToCheck) {
   return true;
 };
 
-function validateUserID(responseArray, number, string) {
-  if (responseArray[0].message === `No traveler found with an id of ${number}` || string !== 'traveler') {
+function validateUserID(responseObject, number, string) {
+  if (responseObject.message === `No traveler found with an id of ${number}` || string !== 'traveler') {
     alert('Incorrect username');
     loginForm.reset();
     return false;
@@ -233,7 +233,7 @@ function displayPastTrips() {
 function displayUpcomingTrips() {
   let futureTrips = trips.findSortedTripsBy('userID', userID).filter(trip => {
     let parsedDate = dayjs(trip.date, ["YYYY-MM-DD", "YYYY-M-DD"]);
-    return parsedDate > dayjs(today);
+    return parsedDate >= dayjs(today);
   });
 
   if (futureTrips.length === 0) {
